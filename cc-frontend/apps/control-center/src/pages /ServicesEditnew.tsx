@@ -23,8 +23,6 @@ import Button from '@mui/material/Button';
 import { ServiceData } from './ServicesTable';
 import { HostsData } from './HostsTable';
 import axios from 'axios';
-import url_backend from '../configs/url';
-
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -81,13 +79,11 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
     get_instances();
   }, [data]);
 
-  const request_url=url_backend+'/api/hosts/';
+  const request_url = '/api/hosts/';
 
   const getProductData = async () => {
     try {
-      const data = await axios.get<HostsData[]>(
-        request_url
-      );
+      const data = await axios.get<HostsData[]>(request_url);
 
       sethostsData(data.data);
     } catch (e) {
@@ -134,23 +130,23 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
     else setScaledInstances(scaledinstances - 1);
   };
 
-  const handleDiscard =(event: React.MouseEvent<unknown>)=>{
-   get_instances();
-  }
-  const handleSave = async(
+  const handleDiscard = (event: React.MouseEvent<unknown>) => {
+    get_instances();
+  };
+  const handleSave = async (
     event: React.MouseEvent<unknown>,
     type: string,
     serviceName: string
   ) => {
     console.log(scaledinstances);
-    const scalingRequest ={ scale: '', instances: 0 };
-    const request_url=url_backend+'/api/services/';
+    const scalingRequest = { scale: '', instances: 0 };
+    const request_url = '/api/services/';
 
     const x = data.map((obj) => {
       return obj.actual_instances;
     })[0];
     const temp = scaledinstances - x;
-    
+
     if (temp > 0) {
       if (type === 'Free Scale') {
         alert('no limitations. ' + temp + ' instances will be added');
@@ -161,8 +157,8 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
         } else {
           alert(
             'max limit:' +
-            number_of_hosts +
-            ' current scale up value not possible'
+              number_of_hosts +
+              ' current scale up value not possible'
           );
         }
       } else if (type === 'Stateful') {
@@ -174,7 +170,8 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
             'max limit:' + labelHosts + ' current scale up value not possible'
           );
         }
-      } else { // Restricted Scale
+      } else {
+        // Restricted Scale
         const labelHosts = checkLabel(serviceName);
         if (scaledinstances <= labelHosts) {
           alert('only 1 instance per node.' + temp + 'instances will be added');
@@ -184,37 +181,31 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
           );
         }
       }
-      scalingRequest['scale']="up";
-      scalingRequest['instances']=temp;
-    }
-    else if (temp === 0) {
+      scalingRequest['scale'] = 'up';
+      scalingRequest['instances'] = temp;
+    } else if (temp === 0) {
       alert('No scale up or scale down');
-    }
-    else {
+    } else {
       const scaledown = Math.abs(temp);
       alert(' Scale down ' + scaledown + ' instances');
-      scalingRequest['scale']="down";
-      scalingRequest['instances']=scaledown;
+      scalingRequest['scale'] = 'down';
+      scalingRequest['instances'] = scaledown;
     }
-    if(scalingRequest['scale']!==""){
-    console.log(scalingRequest);
-    
+    if (scalingRequest['scale'] !== '') {
+      console.log(scalingRequest);
 
-    try {
-
-      const response = await axios({
-      method: "post",
-      url: request_url,
-      data: JSON.stringify(scalingRequest),
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    console.log(response);
-  
-  } catch(error) {
-  
-    console.log(error);
-  }}
-
+      try {
+        const response = await axios({
+          method: 'post',
+          url: request_url,
+          data: JSON.stringify(scalingRequest),
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const checkLabel = (serviceName) => {
@@ -390,8 +381,12 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                     >
                       Save
                     </Button>
-                    <Button variant="contained"
-                    onClick={(event) => handleDiscard(event)}>Discard</Button>
+                    <Button
+                      variant="contained"
+                      onClick={(event) => handleDiscard(event)}
+                    >
+                      Discard
+                    </Button>
                   </Stack>
                 </div>
               </div>

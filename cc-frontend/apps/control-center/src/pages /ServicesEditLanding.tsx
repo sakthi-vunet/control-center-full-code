@@ -5,9 +5,7 @@ import * as React from 'react';
 import { ControlledAccordions } from './ServicesView';
 import { useLocation } from 'react-router-dom';
 import { ServiceData } from './ServicesTable';
-import {ServicesEdit }from './ServicesEditnew';
-import url_backend from '../configs/url';
-
+import { ServicesEdit } from './ServicesEditnew';
 
 type ServicesInfoprops = {
   id?: string;
@@ -18,8 +16,7 @@ export const ServicesEditLanding = (props: ServicesInfoprops) => {
   const idhere = location.state as ServicesInfoprops;
 
   const getProductData = async () => {
-    
-    let url=url_backend+'/api/services/?_id='
+    let url = '/api/services/?_id=';
     url = url + idhere.id;
     console.log(url);
     try {
@@ -36,12 +33,9 @@ export const ServicesEditLanding = (props: ServicesInfoprops) => {
     getProductData();
   }, []);
 
-  
   return (
-    <Box
-      component="main"
-      sx={{ flexGrow: 1, p: 3,display:'flex'}}>
-         {/* marginLeft: { sm: `200px`, md: `200px` } }}> */}
+    <Box component="main" sx={{ flexGrow: 1, p: 3, display: 'flex' }}>
+      {/* marginLeft: { sm: `200px`, md: `200px` } }}> */}
       <Toolbar />
 
       <ServicesEdit data={data} />

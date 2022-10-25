@@ -18,7 +18,7 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from "material-ui-search-bar";
+import SearchBar from 'material-ui-search-bar';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
@@ -34,63 +34,54 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-import url_backend from '../configs/url';
 import { request } from 'https';
 
-export interface HostsData{
-  _id:               string;
-  name:              string;
-  description:       string;
-  OS:                string;
-  Running_services:  number;
+export interface HostsData {
+  _id: string;
+  name: string;
+  description: string;
+  OS: string;
+  Running_services: number;
   Running_instances: number;
-  health_status:     string;
-  services:          Service[];
-  labels:            string[];
-  number_of_cores:   number;
-  processor_type:    string;
-  memory:            string;
-  total_storage:     string;
-  storage_mounts:    StorageMount[];
+  health_status: string;
+  services: Service[];
+  labels: string[];
+  number_of_cores: number;
+  processor_type: string;
+  memory: string;
+  total_storage: string;
+  storage_mounts: StorageMount[];
 }
 
-export interface MigrateServicesListData{
-  p:string[];
-  np:string[];
+export interface MigrateServicesListData {
+  p: string[];
+  np: string[];
 }
 
 export interface Service {
-  Name:      string;
+  Name: string;
   Instances: number;
 }
 
 export interface StorageMount {
   Mount_point: string;
-  Storage:     string;
+  Storage: string;
 }
 
-
-const deleteHost =async (data) =>{
-    
-  const request_url=url_backend+'/api/hosts/';
+const deleteHost = async (data) => {
+  const request_url = '/api/hosts/';
   try {
-
-      const response = await axios({
-      method: "put",
+    const response = await axios({
+      method: 'put',
       url: request_url,
       data: data,
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     console.log(response);
-  
-  } catch(error) {
-  
+  } catch (error) {
     console.log(error);
   }
- 
 };
-
-
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -106,11 +97,12 @@ type Order = 'asc' | 'desc';
 
 function getComparator<Key extends keyof HostsData>(
   order: Order,
-  orderBy: Key,
+  orderBy: Key
 ): (
   // a: { [key in Key]: number | string |string[]|Service},
   // b: { [key in Key]: number | string |string[]|Service},
-  a: HostsData, b: HostsData
+  a: HostsData,
+  b: HostsData
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -119,7 +111,10 @@ function getComparator<Key extends keyof HostsData>(
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(
+  array: readonly T[],
+  comparator: (a: T, b: T) => number
+) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -162,12 +157,15 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Health Status',
-  }
+  },
 ];
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof HostsData) => void;
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof HostsData
+  ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -175,18 +173,20 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler =
     (property: keyof HostsData) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
-  
-    
   return (
-   
-   
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
@@ -200,64 +200,56 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-           headCell.id !=='services'?(
-          <TableCell
-            key={headCell.id}
-            align= 'left' //{headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+        {headCells.map((headCell) =>
+          headCell.id !== 'services' ? (
+            <TableCell
+              key={headCell.id}
+              align="left" //{headCell.numeric ? 'right' : 'left'}
+              padding={headCell.disablePadding ? 'none' : 'normal'}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === 'desc'
+                      ? 'sorted descending'
+                      : 'sorted ascending'}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ) : (
+            <TableCell
+              key={headCell.id}
+              align="left" //{headCell.numeric ? 'right' : 'left'}
+              padding={headCell.disablePadding ? 'none' : 'normal'}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>):(
-            <TableCell
-            key={headCell.id}
-           
-            align= 'left' //{headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}>
-           {headCell.label}
-           
-           </TableCell>
+            </TableCell>
           )
-         
-        ))}
-         <TableCell>
-            Actions
-            
-      </TableCell>
+        )}
+        <TableCell>Actions</TableCell>
       </TableRow>
     </TableHead>
-   
   );
 }
 
+export const HostsTable: React.FC<{ data: HostsData[] }> = ({ data }) => {
+  const navigate = useNavigate();
+  const routeChangeView = (name: string) => {
+    const path = `/app/controlcenter/HostsInfo`;
+    navigate(path, { state: { id: name } });
+  };
 
-export const HostsTable : React.FC<{data: HostsData[]}> = ({ data }) => {
-
-  const navigate=useNavigate();
-  const routeChangeView = (name:string) =>{ 
-    const path = `/app/controlcenter/HostsInfo`; 
-    navigate(path,{state:{id:name}});
-  }
-
-  const routeChangeEdit=(name:string)=>{
-    const path=`/app/controlcenter/EditHosts`;
-    navigate(path,{state:{id:name}})
-  }
-  
-
+  const routeChangeEdit = (name: string) => {
+    const path = `/app/controlcenter/EditHosts`;
+    navigate(path, { state: { id: name } });
+  };
 
   const [orderBy, setOrderBy] = React.useState<keyof HostsData>('name');
   const [order, setOrder] = React.useState<Order>('asc');
@@ -265,35 +257,33 @@ export const HostsTable : React.FC<{data: HostsData[]}> = ({ data }) => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [searched, setSearched] = React.useState<string>("");
-  const [rows1,setRows1]=React.useState<HostsData[]>(data);
+  const [searched, setSearched] = React.useState<string>('');
+  const [rows1, setRows1] = React.useState<HostsData[]>(data);
 
-  const [numSelected,setNums]= React.useState(0);
-  
+  const [numSelected, setNums] = React.useState(0);
 
   React.useEffect(() => {
     setRows1(data);
-    setNums(selected.length)
-}, [data,selected.length])
+    setNums(selected.length);
+  }, [data, selected.length]);
 
-const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
-
- 
+  const [migrateList, setMigrateList] =
+    React.useState<MigrateServicesListData>();
 
   const requestSearch = (searchedVal: string) => {
-      const filteredRows = data.filter((row) => {
-        return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-      });
-      setRows1(filteredRows);
-    };
-  
-    const cancelSearch = () => {
-      setSearched("");
-      requestSearch(searched);
-    };
+    const filteredRows = data.filter((row) => {
+      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows1(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched('');
+    requestSearch(searched);
+  };
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof HostsData,
+    property: keyof HostsData
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -322,7 +312,7 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -333,223 +323,199 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleHostsView =(event:React.MouseEvent<unknown>,name:string)=>{
-    console.log(name+"View");
+  const handleHostsView = (event: React.MouseEvent<unknown>, name: string) => {
+    console.log(name + 'View');
     event.preventDefault();
     event.stopPropagation();
     routeChangeView(name);
   };
 
-  const [typeData,setTypeData]=React.useState<{[key: string]: any}>({});
-  const [hostobjDelete,sethostobjDelete]=React.useState<HostsData>();
+  const [typeData, setTypeData] = React.useState<{ [key: string]: any }>({});
+  const [hostobjDelete, sethostobjDelete] = React.useState<HostsData>();
 
-  const handleHostsDelete=(event:React.MouseEvent<unknown>,hostobj:HostsData)=>{
+  const handleHostsDelete = (
+    event: React.MouseEvent<unknown>,
+    hostobj: HostsData
+  ) => {
     sethostobjDelete(hostobj);
     // console.log("hostobjdelete"+JSON.stringify(hostobjDelete));
     // console.log("Delete");
     // console.log(JSON.stringify(hostobj));
-    if(JSON.stringify(hostobj['services'])===JSON.stringify([])){
+    if (JSON.stringify(hostobj['services']) === JSON.stringify([])) {
       alert('host has no service running on it. Deletion will be done');
-      deleteHost('delete '+hostobj['name']);
-
-    }
-    else{
+      deleteHost('delete ' + hostobj['name']);
+    } else {
       // alert('There are services running on the host. Deletion is not possible');
       HostServiceTypes(hostobj);
-      
-      
+
       handleClickOpen();
     }
     event.preventDefault();
     event.stopPropagation();
-
-  }
-  const routeChangeAddHosts= () => {
+  };
+  const routeChangeAddHosts = () => {
     const path = `/app/controlcenter/AddHosts`;
     navigate(path);
   };
 
-  const handleHostsEdit=(event:React.MouseEvent<unknown>,name:string)=>{
-    console.log(name+"Edit");
+  const handleHostsEdit = (event: React.MouseEvent<unknown>, name: string) => {
+    console.log(name + 'Edit');
     event.preventDefault();
     event.stopPropagation();
     routeChangeEdit(name);
   };
-  
+
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const getServices=(row:Service[])=>{
-    let str="";
-    for(let i=0;i<row.length;i++){
-      str=str+row[i].Name+'('+JSON.stringify(row[i].Instances)+')';
-      if(i!==row.length-1)
-        str=str+',';
-
+  const getServices = (row: Service[]) => {
+    let str = '';
+    for (let i = 0; i < row.length; i++) {
+      str = str + row[i].Name + '(' + JSON.stringify(row[i].Instances) + ')';
+      if (i !== row.length - 1) str = str + ',';
     }
     return str;
-  }
+  };
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
-    
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  
 
   const [migrateopen, setMigrateOpen] = React.useState(false);
 
   const handleMigrateOpen = () => {
     handleClose();
     setMigrateOpen(true);
-    console.log("host obj from migrate"+JSON.stringify(hostobjDelete));
+    console.log('host obj from migrate' + JSON.stringify(hostobjDelete));
     handleMigrate(hostobjDelete);
-    console.log("Migrate List"+JSON.stringify(migrateList));
-    
-    
+    console.log('Migrate List' + JSON.stringify(migrateList));
   };
 
   const handleMigrateClose = () => {
     setMigrateOpen(false);
   };
 
-  async function handleMigrate(hostobj){
-
-    const request_url=url_backend+'/api/migrateservices/'
+  async function handleMigrate(hostobj) {
+    const request_url = '/api/migrateservices/';
     try {
-  
       const response = await axios({
-      method: "put",
-      url:request_url,
-      data:JSON.stringify( hostobj),
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    
-    setMigrateList(response.data);
-    console.log("Response"+response.data);
+        method: 'put',
+        url: request_url,
+        data: JSON.stringify(hostobj),
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-  } catch(error) {
-  
-    console.log(error);
-    
-  }
-  
-  
- 
+      setMigrateList(response.data);
+      console.log('Response' + response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function HostServiceTypes(data) {
-    
-    let temp='';
-    const request_url=url_backend+'/api/servicetypes/'
-    
+    let temp = '';
+    const request_url = '/api/servicetypes/';
+
     try {
-  
-        const response = await axios({
-        method: "put",
+      const response = await axios({
+        method: 'put',
         url: request_url,
-        data:JSON.stringify( data),
-        headers: { "Content-Type": "multipart/form-data" },
+        data: JSON.stringify(data),
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      temp=JSON.stringify(response.data);
+      temp = JSON.stringify(response.data);
       setTypeData(response.data);
-    
-    } catch(error) {
-    
+    } catch (error) {
       console.log(error);
-      temp="failed";
+      temp = 'failed';
     }
     console.log(temp);
     return temp;
-   
-  };
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        })
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(numSelected > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
         >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-         Hosts
-        </Typography>
-        
-      
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-       
-      ) : (
-        <>
-        {/* <SearchBar
+          {numSelected > 0 ? (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {numSelected} selected
+            </Typography>
+          ) : (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Hosts
+            </Typography>
+          )}
+          {numSelected > 0 ? (
+            <Tooltip title="Delete">
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <>
+              {/* <SearchBar
         value={searched}
         onChange={(searchVal) => requestSearch(searchVal)}
         onCancelSearch={() => cancelSearch()}
       
         /> */}
-       <Tooltip title="Add Host">
-          <IconButton onClick={routeChangeAddHosts}>
-           <AddCircleOutlineRoundedIcon/>
-          </IconButton>
-        </Tooltip>
-        </>
-      
-      )}
-    </Toolbar>
+              <Tooltip title="Add Host">
+                <IconButton onClick={routeChangeAddHosts}>
+                  <AddCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
+        </Toolbar>
         {/* <span style={{marginLeft:'.001rem'}}/> */}
-        <Paper sx={{ width:'20%',textAlign:'center'}}>
-        
-
-     
-        </Paper>
+        <Paper sx={{ width: '20%', textAlign: 'center' }}></Paper>
         {/* <span style={{marginLeft:'.5rem'}}/> */}
         <TableContainer>
           <Table
-            sx={{ minWidth: 70}}
+            sx={{ minWidth: 70 }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
-          {/* <colgroup>
+            {/* <colgroup>
           <col width="5%" />
           <col width="10%" />
           <col width="5%" />
@@ -568,7 +534,9 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
               rows.slice().sort(getComparator(order, orderBy)) */}
-              {rows1.slice().sort(getComparator(order, orderBy))
+              {rows1
+                .slice()
+                .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -584,10 +552,9 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
                       key={row.name}
                       selected={isItemSelected}
                       //   sx={{padding:"checkbox"}}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
-                      
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                      <TableCell padding="checkbox" width='5%'>
+                      <TableCell padding="checkbox" width="5%">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -602,36 +569,47 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
                         scope="row"
                         padding="checkbox"
                         align="left"
-                        width='25%'
+                        width="25%"
                       >
                         {row.name}
                       </TableCell>
 
-                      <TableCell align="left" width='5%'>{JSON.stringify(row.Running_services)+'/'+JSON.stringify(row.Running_instances)}</TableCell>
-                      <TableCell align="left" width='25%'>{getServices(row.services)}</TableCell>
-                      <TableCell align="left" width='5%'>{row.health_status}</TableCell>
-                      
-                      <TableCell align="left" width='25%'>
+                      <TableCell align="left" width="5%">
+                        {JSON.stringify(row.Running_services) +
+                          '/' +
+                          JSON.stringify(row.Running_instances)}
+                      </TableCell>
+                      <TableCell align="left" width="25%">
+                        {getServices(row.services)}
+                      </TableCell>
+                      <TableCell align="left" width="5%">
+                        {row.health_status}
+                      </TableCell>
 
+                      <TableCell align="left" width="25%">
                         <Tooltip title="Hosts Detail">
                           <IconButton
-                          onClick={(event) => handleHostsView(event, row.name)}
+                            onClick={(event) =>
+                              handleHostsView(event, row.name)
+                            }
                           >
-                            <VisibilityIcon sx={{ fontSize: 20 }}/>
+                            <VisibilityIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit">
-                          <IconButton 
-                          onClick={(event) => handleHostsEdit(event, row.name)}
+                          <IconButton
+                            onClick={(event) =>
+                              handleHostsEdit(event, row.name)
+                            }
                           >
-                            <EditIcon sx={{ fontSize: 20 }}/>
+                            <EditIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="delete host">
-                          <IconButton 
-                           onClick={(event) => handleHostsDelete(event, row)}
+                          <IconButton
+                            onClick={(event) => handleHostsDelete(event, row)}
                           >
-                            <DeleteIcon/>
+                            <DeleteIcon />
                           </IconButton>
                         </Tooltip>
                       </TableCell>
@@ -661,60 +639,86 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
         />
       </Paper>
       <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>There are few services running on this host.Upon Deletion,Data will be lost</DialogTitle>
-        <DialogContent>
-         
-          
-        
-          <Box bgcolor={"#eeeeee"} sx={{p:2}} >
-          <DialogContentText>
-            
-          <Typography sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap'}} color="red" >
-          {Object.entries(typeData)
-      .map( ([key, value]) => <div>{key}{'=>'}{JSON.stringify(value)}
-      
-      </div>)}
-          </Typography>
-          </DialogContentText>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-        <Button onClick={handleMigrateOpen}>Migrate</Button>
-          <Button onClick={handleClose}>Close</Button>
-          <Box>
-          <Button onClick={handleClose}>Delete anyway</Button>
-          
-          </Box>
-        </DialogActions>
-      </Dialog>
-    </div>
-    <div>
-      <Dialog open={migrateopen} onClose={handleMigrateClose}>
-        <DialogTitle>Services that can be migrated</DialogTitle>
-        <DialogContent>
-           
-        
-          <Box bgcolor={"#eeeeee"} sx={{p:2}} >
-          <DialogContentText>
-          <Typography sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap'}} color="red" >{JSON.stringify(migrateList?.p)}</Typography>
-          </DialogContentText>
-          </Box>
-        </DialogContent>
-        <DialogTitle>Services that cannot be migrated</DialogTitle>
-        <DialogContent>
-          <Box bgcolor={"#eeeeee"} sx={{p:2}} >
-          <DialogContentText>
-          <Typography sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap'}} color="red" >{JSON.stringify(migrateList?.np)}</Typography>
-          </DialogContentText>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-        <Button onClick={handleMigrateClose}>Close</Button>        
-        </DialogActions>
-      </Dialog>
-    </div>
-      
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>
+            There are few services running on this host.Upon Deletion,Data will
+            be lost
+          </DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                  }}
+                  color="red"
+                >
+                  {Object.entries(typeData).map(([key, value]) => (
+                    <div>
+                      {key}
+                      {'=>'}
+                      {JSON.stringify(value)}
+                    </div>
+                  ))}
+                </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleMigrateOpen}>Migrate</Button>
+            <Button onClick={handleClose}>Close</Button>
+            <Box>
+              <Button onClick={handleClose}>Delete anyway</Button>
+            </Box>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog open={migrateopen} onClose={handleMigrateClose}>
+          <DialogTitle>Services that can be migrated</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                  }}
+                  color="red"
+                >
+                  {JSON.stringify(migrateList?.p)}
+                </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogTitle>Services that cannot be migrated</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                  }}
+                  color="red"
+                >
+                  {JSON.stringify(migrateList?.np)}
+                </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleMigrateClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </Box>
   );
-}
+};
