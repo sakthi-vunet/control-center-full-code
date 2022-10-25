@@ -1,0 +1,118 @@
+version: "3.9"
+   
+services:
+  db:
+    volumes:
+      # - /home/vunet:/var/lib/mysql
+      - /home/sakthi/testappsql:/docker-entrypoint-initdb.d
+    container_name: mysql_container_cc
+    # command:  --init-file /docker-entrypoint-initdb.d/backup.sql  #attention here
+    # command: --default-authentication-plugin=mysql_native_password
+    # command: mysqld --user=root
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: helloworld
+      MYSQL_DATABASE: testapp
+      # MYSQL_HOST_AUTH_METHOD: trust
+      # MYSQL_USER: root
+    ports:
+      - "3307:3306"
+    
+    networks:
+      - cc-backend-app
+    
+  web:
+    build: .
+    # command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/ping:/usr/bin/ping
+      - /usr/bin/telnet:/usr/bin/telnet
+      - /usr/bin/ssh-keygen:/usr/bin/ssh-keygen
+    ports:
+      - "8000:8000"
+    environment:
+      MYSQL_ROOT_PASSWORD: helloworld
+      MYSQL_DATABASE: testapp
+    
+    networks:
+      - cc-backend-app
+    depends_on:
+      - db
+
+networks:
+  cc-backend-app:
+    driver: bridge
+
+volumes:
+  cc-backend-app:
+    driver: local
+      # - db-docker_mysql-development_1
+
+# version: "3.9"
+   
+# services:
+#   db:
+#     volumes:
+#       # - /home/vunet:/var/lib/mysql
+#       - /home/sakthi/testappsql:/docker-entrypoint-initdb.d
+#     container_name: mysql_container_cc
+#     # command:  --init-file /docker-entrypoint-initdb.d/backup.sql  #attention here
+#     # command: --default-authentication-plugin=mysql_native_password
+#     # command: mysqld --user=root
+#     image: mysql:8.0.17
+#     environment:
+#       MYSQL_ROOT_PASSWORD: helloworld
+#       MYSQL_DATABASE: testapp
+#       # MYSQL_HOST_AUTH_METHOD: trust
+#       # MYSQL_USER: root
+#     ports:
+#       - "3307:3306"
+    
+#     networks:
+#       - cc-backend-app
+    
+#   web:
+#     build: .
+#     # command: python manage.py runserver 0.0.0.0:8000
+#     volumes:
+#       - .:/code
+#       - /var/run/docker.sock:/var/run/docker.sock
+#       - /usr/bin/ping:/usr/bin/ping
+#       - /usr/bin/telnet:/usr/bin/telnet
+#       # - .:/var/www/html
+#     ports:
+#       - "8000:8000"
+#     environment:
+#       MYSQL_ROOT_PASSWORD: helloworld
+#       MYSQL_DATABASE: testapp
+    
+#     networks:
+#       - cc-backend-app
+#     depends_on:
+#       - db
+  
+#   # front-end:
+#   #   # build: /home/sakthi/vunet/dist/apps/control-center
+#   #   image: nginx:alpine
+#   #   ports:
+#   #     - '4201:4201' 
+#   #   volumes:
+#   #     - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    
+#   #   networks:
+#   #     - cc-backend-app
+#   #   depends_on:
+#   #     - db
+#   #     - web
+
+# networks:
+#   cc-backend-app:
+#     driver: bridge
+
+# volumes:
+#   cc-backend-app:
+#     driver: local
+#       # - db-docker_mysql-development_1
+

@@ -1,0 +1,226 @@
+[
+  {
+    "_id": 1,
+    "name": "elasticsearch",
+    "type": "Stateful",
+    "state": "enabled",
+    "description": "1 instance per node on M nodes",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 2,
+    "name": "broker",
+    "type": "Stateful",
+    "state": "enabled",
+    "description": "1 instance per node on M nodes",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 3,
+    "name": "connect",
+    "type": "Restricted Scale",
+    "state": "enabled",
+    "description": "Can run 1 instance each per port per node on M nodes",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 4,
+    "name": "geoserver",
+    "type": "Standalone",
+    "state": "enabled",
+    "description": "1 instance at System level",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 5,
+    "name": "goflow",
+    "type": "Restricted Scale",
+    "state": "enabled",
+    "description": "Can run 1 instance each per port per node on M nodes",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 6,
+    "name": "heartbeat",
+    "type": "Free Scale",
+    "state": "enabled",
+    "description": "Can run N instances on M Nodes(No Limitations)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 7,
+    "name": "logstash",
+    "type": "Free Scale",
+    "state": "enabled",
+    "description": "Can run N instances on M Nodes(No Limitations)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 8,
+    "name": "mysql",
+    "type": "Stateful",
+    "state": "enabled",
+    "description": "1 instance per node on M nodes",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 9,
+    "name": "route",
+    "type": "Standalone",
+    "state": "enabled",
+    "description": "Can run only 1 instance (at system level)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 10,
+    "name": "telegraf",
+    "type": "Free Scale",
+    "state": "enabled",
+    "description": "Can run N instances on M nodes. (no limitations)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 11,
+    "name": "telegraf-heartbeat",
+    "type": "Free Scale",
+    "state": "enabled",
+    "description": "Can run N instances on M nodes. (no limitations)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 12,
+    "name": "telegraf-snmp",
+    "type": "Free Scale",
+    "state": "enabled",
+    "description": "Can run N instances on M nodes. (no limitations)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 13,
+    "name": "timescaledb",
+    "type": "Stateful",
+    "state": "enabled",
+    "description": "1 instance per node on M nodes ",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  },
+  {
+    "_id": 14,
+    "name": "vuinterface",
+    "type": "Restricted Scale",
+    "state": "enabled",
+    "description": "Can run 1 instance on M nodes(once Traefik is available N instances on M nodes) ",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 15,
+    "name": "vunode",
+    "type": "Standalone",
+    "state": "enabled",
+    "description": "Can run only 1 instance (at system level)",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 0,
+    "hosts": []
+  },
+  {
+    "_id": 16,
+    "name": "zookeeper",
+    "type": "Stateful",
+    "state": "enabled",
+    "description": "1 instance per node on M nodes ",
+    "expected_instances": 1,
+    "labels": [
+      "node.hostname == sakthi-laptop"
+    ],
+    "actual_instances": 1,
+    "hosts": [
+      "sakthi-laptop"
+    ]
+  }
+]

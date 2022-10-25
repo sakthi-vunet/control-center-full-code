@@ -1,0 +1,11 @@
+[
+    {
+        "healthy_hosts": 5,
+        "services_running": 2,
+        "instances_running": 1,
+        "unhealthy_hosts": ["host-2"],
+        "unhealthy_services": ["elasticsearch"],
+        "stopped_instances": ["elasticsearch-1", "dcm-celery"]
+
+    }
+]

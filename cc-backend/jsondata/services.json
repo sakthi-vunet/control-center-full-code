@@ -1,0 +1,46 @@
+[
+  {
+    "_id": "b22d81",
+    "name": "Availability",
+    "type": "Free Scale",
+    "state": "enabled",
+    "description": "manages",
+    "expected_instances": 3,
+    "actual_instances": 3,
+    "hosts": ["host-1", "host-5", "host-7"],
+    "labels": ["man", "manager"]
+  },
+  {
+    "_id": "c2f80a",
+    "name": "Elastic Search",
+    "type": "Stateful",
+    "state": "disabled",
+    "description": "monitors",
+    "expected_instances": 3,
+    "actual_instances": 2,
+    "hosts": ["host-1", "host-5"],
+    "labels": ["mon", "monit"]
+  },
+  {
+    "_id": "21da1o",
+    "name": "GeoServer",
+    "type": "Standalone",
+    "state": "disabled",
+    "description": "handles",
+    "expected_instances": 2,
+    "actual_instances": 2,
+    "hosts": ["host-2", "host-7"],
+    "labels": ["han", "handler"]
+  },
+  {
+    "_id": "23a23c",
+    "name": "GoFlow",
+    "type": "RestrictedScale",
+    "state": "enabled",
+    "description": "drives",
+    "expected_instances": 3,
+    "actual_instances": 1,
+    "hosts": ["host-1", "host-6", "host-4"],
+    "labels": ["driv", "D"]
+  }
+]

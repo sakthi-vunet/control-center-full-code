@@ -1,0 +1,226 @@
+[
+  {
+    "_id": "62cd1ed6abcbc185f5607e75",
+    "name": "host-1",
+    "description": "et ipsum nisi id deserunt sunt culpa consequat",
+    "OS": "Vortexaco",
+    "Running_services": 2,
+    "Running_instances": 5,
+    "health_status": "Not Available",
+    "services": [
+      {
+        "Name": "vuInterface",
+        "Instances": 3
+      },
+      {
+        "Name": "SNMP vuNode",
+        "Instances": 2
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed67904fb75127da4ae",
+    "name": "host-2",
+    "description": "cupidatat duis dolor labore deserunt quis aliqua incididunt",
+    "OS": "Utara",
+    "Running_services": 1,
+    "Running_instances": 2,
+    "health_status": "Not Available",
+    "services": [
+      {
+        "Name": "vuStreams",
+        "Instances": 2
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed657e6a490839a8599",
+    "name": "host-3",
+    "description": "fugiat sunt id adipisicing ut veniam mollit qui",
+    "OS": "Exostream",
+    "Running_services": 1,
+    "Running_instances": 1,
+    "health_status": "Healthy",
+    "services": [
+      {
+        "Name": "vuStreams",
+        "Instances": 1
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed6541e90796ae238ba",
+    "name": "host-4",
+    "description": "est ut Lorem incididunt cillum veniam Lorem sit",
+    "OS": "Isologica",
+    "Running_services": 2,
+    "Running_instances": 4,
+    "health_status": "Healthy",
+    "services": [
+      {
+        "Name": "SQL Db",
+        "Instances": 1
+      },
+      {
+        "Name": "Elastisearch",
+        "Instances": 3
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed6a0444adc5232b38f",
+    "name": "host-5",
+    "description": "officia aute consectetur ea Lorem cillum amet occaecat",
+    "OS": "Buzzopia",
+    "Running_services": 2,
+    "Running_instances": 2,
+    "health_status": "Not Available",
+    "services": [
+      {
+        "Name": "Redis",
+        "Instances": 1
+      },
+      {
+        "Name": "SinkConnect",
+        "Instances": 1
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed66a399c1710493180",
+    "name": "host-6",
+    "description": "qui excepteur pariatur sint ea laboris occaecat eu",
+    "OS": "Providco",
+    "Running_services": 1,
+    "Running_instances": 2,
+    "health_status": "Healthy",
+    "services": [
+      {
+        "Name": "SNMP",
+        "Instances": 2
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed61fb7aee5ab4726fd",
+    "name": "host-7",
+    "description": "quis fugiat culpa qui do officia fugiat veniam",
+    "OS": "Amtas",
+    "Running_services": 1,
+    "Running_instances": 3,
+    "health_status": "Healthy",
+    "services": [
+      {
+        "Name": "Zookeeper",
+        "Instances": 3
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  },
+  {
+    "_id": "62cd1ed64dc82b8b4dcfcde5",
+    "name": "host-8",
+    "description": "mollit magna nostrud sint aliquip aliquip commodo velit",
+    "OS": "Unisure",
+    "Running_services": 2,
+    "Running_instances": 5,
+    "health_status": "Healthy",
+    "services": [
+      {
+        "Name": "GoFlow",
+        "Instances": 2
+      },
+      {
+        "Name": "Heartbeat",
+        "Instances": 3
+      }
+    ],
+    "labels": ["host-1", "main-host"],
+    "number_of_cores": 4,
+    "processor_type": "Intel Core",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "storage_mounts": [
+      {
+        "Mount_point": "abc",
+        "Storage": "23"
+      }
+    ]
+  }
+]

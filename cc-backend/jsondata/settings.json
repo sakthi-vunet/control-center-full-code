@@ -1,0 +1,7 @@
+[
+  {
+    "hosts": 4,
+    "expected_instances": 6,
+    "enabled_services": 2
+  }
+]

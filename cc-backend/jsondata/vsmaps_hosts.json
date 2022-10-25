@@ -1,0 +1,88 @@
+[
+  {
+    "name": "sakthi-laptop",
+    "description": "host on current machine",
+    "labels": [
+      "goflow",
+      "heartbeat",
+      "telegraf",
+      "vuInterface",
+      "vunetstrem",
+      "vunode",
+      "vuNodeSNMPCelery",
+      "redis",
+      "geoserver"
+    ],
+    "health_status": "Healthy",
+    "OS": "Linux",
+    "memory": "15.4 GiB",
+    "total_storage": "511 GiB",
+    "processor_type": "Intel Core",
+    "storage_mounts": [
+      {
+        "Storage": "23 mb",
+        "Mount_point": "/etc/fstab"
+      }
+    ],
+    "number_of_cores": 4,
+    "_id": "e7qi1kopjt",
+    "services": [
+      {
+        "Name": "vsmaps_broker-1",
+        "Instances": 1
+      },
+      {
+        "Name": "vsmaps_geoserver",
+        "Instances": 1
+      },
+      {
+        "Name": "vsmaps_heartbeat-1-1-1",
+        "Instances": 1
+      },
+      {
+        "Name": "vsmaps_logstash",
+        "Instances": 1
+      },
+      {
+        "Name": "vsmaps_mysql-2",
+        "Instances": 1
+      },
+      {
+        "Name": "vsmaps_timescaledb",
+        "Instances": 1
+      },
+      {
+        "Name": "vsmaps_zookeeper-1",
+        "Instances": 1
+      }
+    ],
+    "Running_services": 7,
+    "Running_instances": 7
+  },
+  {
+    "name": "sakthi-vm",
+    "description": "1",
+    "labels": [
+      "vuNodeDataCollector",
+      "Telegraf heartbeat",
+      "vuNodeDiscoveryCelery",
+      "geoserver",
+      "vuNodeDCM",
+      "heartbeat"
+    ],
+    "health_status": "Healthy",
+    "OS": "1",
+    "memory": "1",
+    "total_storage": "1",
+    "processor_type": "1",
+    "storage_mounts": {
+      "Storage": "1",
+      "Mount_point": "1"
+    },
+    "number_of_cores": "1",
+    "_id": null,
+    "services": [],
+    "Running_services": 0,
+    "Running_instances": 0
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "_id": "62cd03b8169d160038794bb9",
+    "name": "Availabilty-1",
+    "node": "vunet-3412"
+  },
+  {
+    "_id": "62cd03b85dd2d27b44e0d11f",
+    "name": "Availabilty-2",
+    "node": "vunet-3410"
+  },
+  {
+    "_id": "62cd03b802c058b57d1b6a81",
+    "name": "Availabilty-3",
+    "node": "vunet-3410"
+  },
+  {
+    "_id": "62cd03b823f029236c6e1bc1",
+    "name": "GoFlow",
+    "node": "vunet-3410"
+  },
+  {
+    "_id": "62cd03b8a9479ea88b32b9d0",
+    "name": "Heartbeat-1",
+    "node": "vunet-3410"
+  },
+  {
+    "_id": "62cd03b82c762a0e0cdf55d2",
+    "name": "Heartbeat-2",
+    "node": "vunet-3410"
+  },
+  {
+    "_id": "62cd03b80f6c4839b677ac96",
+    "name": "MySQL-1",
+    "node": "vunet-3410"
+  },
+  {
+    "_id": "62cd03b8dce3528f187eb4e6",
+    "name": "MySQL-2",
+    "node": "vunet-3412"
+  },
+  {
+    "_id": "62cd03b81ff46eca7328128d",
+    "name": "SinkConnect-1",
+    "node": "vunet-3412"
+  },
+  {
+    "_id": "62cd03b86f631dc0544aed66",
+    "name": "SinkConnect-2",
+    "node": "vunet-3410"
+  }
+]

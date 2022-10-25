@@ -1,0 +1,130 @@
+[
+  {
+    "_id": "9nsykq61rxry7pez6ml07hx18",
+    "name": "vsmaps_vuinterface-1",
+    "started_at": "2022-09-12T08:50:01.523933565Z",
+    "host": "",
+    "service": "vuinterface",
+    "type": "Restricted Scale"
+  },
+  {
+    "_id": "clcao5jgxvb0lipb3as9elm8x",
+    "name": "server-healthbeat-075",
+    "started_at": "2022-09-12T08:50:01.523969927Z",
+    "host": "",
+    "service": "",
+    "type": ""
+  },
+  {
+    "_id": "egcd2dm50lkzupe1xy30x4rfd",
+    "name": "vsmaps_timescaledb",
+    "started_at": "2022-09-12T08:50:01.52399745Z",
+    "host": "sakthi-laptop",
+    "service": "timescaledb",
+    "type": "Stateful"
+  },
+  {
+    "_id": "ixbvae0lrphaf28ryye6hnmou",
+    "name": "vsmaps_telegraf-snmp-1-1-1",
+    "started_at": "2022-09-12T08:50:01.524013024Z",
+    "host": "",
+    "service": "telegraf-snmp",
+    "type": "Free Scale"
+  },
+  {
+    "_id": "l0acd7z6efwlkuj49dqvuee8s",
+    "name": "vsmaps_heartbeat-1-1-1",
+    "started_at": "2022-09-12T08:50:01.524027525Z",
+    "host": "sakthi-laptop",
+    "service": "heartbeat",
+    "type": "Free Scale"
+  },
+  {
+    "_id": "leg52lt74tfuid1v4ll917iz3",
+    "name": "vsmaps_mysql-2",
+    "started_at": "2022-09-12T08:50:01.524052884Z",
+    "host": "sakthi-laptop",
+    "service": "mysql",
+    "type": "Stateful"
+  },
+  {
+    "_id": "n889qr5hfmxgra50ojv1maf8b",
+    "name": "vsmaps_logstash",
+    "started_at": "2022-09-12T08:50:01.524087788Z",
+    "host": "sakthi-laptop",
+    "service": "logstash",
+    "type": "Free Scale"
+  },
+  {
+    "_id": "nf5618oweycpbox5um6yujloo",
+    "name": "vsmaps_goflow-1",
+    "started_at": "2022-09-12T08:50:01.524110443Z",
+    "host": "",
+    "service": "goflow",
+    "type": "Restricted Scale"
+  },
+  {
+    "_id": "qewjy7s3rr2osjro8cwxxmf0b",
+    "name": "vsmaps_zookeeper-1",
+    "started_at": "2022-09-12T08:50:01.524138494Z",
+    "host": "sakthi-laptop",
+    "service": "zookeeper",
+    "type": "Stateful"
+  },
+  {
+    "_id": "rfy2aho8frz274cx9zmwtjhlv",
+    "name": "vsmaps_mysql-1",
+    "started_at": "2022-09-12T08:50:01.52416905Z",
+    "host": "",
+    "service": "mysql",
+    "type": "Stateful"
+  },
+  {
+    "_id": "t6acw2oivnbplsjidxmamm4to",
+    "name": "vsmaps_telegraf-heartbeat-1-1-1",
+    "started_at": "2022-09-12T08:50:01.52419624Z",
+    "host": "",
+    "service": "telegraf-heartbeat",
+    "type": "Free Scale"
+  },
+  {
+    "_id": "uvw7gg9o26phd0txln4hl64s3",
+    "name": "vsmaps_geoserver",
+    "started_at": "2022-09-12T08:50:01.524257703Z",
+    "host": "sakthi-laptop",
+    "service": "geoserver",
+    "type": "Standalone"
+  },
+  {
+    "_id": "v11ppikmx7aacb8jkz6ak4ycw",
+    "name": "vsmaps_broker-1",
+    "started_at": "2022-09-12T08:50:01.524795413Z",
+    "host": "sakthi-laptop",
+    "service": "broker",
+    "type": "Stateful"
+  },
+  {
+    "_id": "vbqxj2uy7mlzvxreomk5nhoj5",
+    "name": "vsmaps_connect-1",
+    "started_at": "2022-09-12T08:50:01.524838447Z",
+    "host": "",
+    "service": "connect",
+    "type": "Restricted Scale"
+  },
+  {
+    "_id": "wbqmqqmw4i3kncwlbjbmg4tis",
+    "name": "enrichment-preprocessor",
+    "started_at": "2022-09-12T08:50:01.524859121Z",
+    "host": "",
+    "service": "",
+    "type": ""
+  },
+  {
+    "_id": "x7yo2uv0dtgoeh5d779ktq7ya",
+    "name": "vsmaps_telegraf-1",
+    "started_at": "2022-09-12T08:50:01.524897505Z",
+    "host": "",
+    "service": "telegraf",
+    "type": "Free Scale"
+  }
+]
