@@ -20,7 +20,7 @@ import { visuallyHidden } from '@mui/utils';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
 import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from "material-ui-search-bar";
+import SearchBar from 'material-ui-search-bar';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import LoginSharpIcon from '@mui/icons-material/LoginSharp';
@@ -36,62 +36,54 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { common, green } from '@mui/material/colors';
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@material-ui/core';
 import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from "@material-ui/core/styles";
-import url_backend from '../configs/url';
+import { makeStyles } from '@material-ui/core/styles';
 
-export interface ContainerData{
-  _id:        string;
-  name:       string;
+export interface ContainerData {
+  _id: string;
+  name: string;
   started_at: string;
-  host:       string;
-  service:    string;
-  type:       string;
+  host: string;
+  service: string;
+  type: string;
 }
 
 const theme = createTheme({
   overrides: {
-      MuiTableCell: {
-          root: {  //This can be referred from Material UI API documentation. 
-              padding: '4px 8px',
-              backgroundColor: "#fff",
-          },
+    MuiTableCell: {
+      root: {
+        //This can be referred from Material UI API documentation.
+        padding: '4px 8px',
+        backgroundColor: '#fff',
       },
+    },
   },
 });
 
 const useStyles = makeStyles({
   tableRow: {
-    height: 30
+    height: 30,
   },
   tableCell: {
-    padding: "0px 16px"
-  }
+    padding: '0px 16px',
+  },
 });
 
-const actionContainer =async (data) =>{
-    
-  const request_url=url_backend+'/api/containers/';
+const actionContainer = async (data) => {
+  const request_url = '/api/containers/';
   try {
-
-      const response = await axios({
-      method: "put",
+    const response = await axios({
+      method: 'put',
       url: request_url,
       data: JSON.stringify(data),
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     console.log(response);
-  
-  } catch(error) {
-  
+  } catch (error) {
     console.log(error);
   }
- 
 };
-
-
-
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -107,10 +99,10 @@ type Order = 'asc' | 'desc';
 
 function getComparator<Key extends keyof ContainerData>(
   order: Order,
-  orderBy: Key,
+  orderBy: Key
 ): (
-  a: { [key in Key]: number | string |string[]},
-  b: { [key in Key]: number | string |string[]},
+  a: { [key in Key]: number | string | string[] },
+  b: { [key in Key]: number | string | string[] }
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -119,7 +111,10 @@ function getComparator<Key extends keyof ContainerData>(
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(
+  array: readonly T[],
+  comparator: (a: T, b: T) => number
+) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -150,30 +145,36 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Node',
-  }
-  
+  },
 ];
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof ContainerData) => void;
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof ContainerData
+  ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
   rowCount: number;
 }
 
-
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler =
     (property: keyof ContainerData) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
-    
+
   return (
-    
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
@@ -190,10 +191,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align= 'left' //{headCell.numeric ? 'right' : 'left'}
+            align="left" //{headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -208,12 +208,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               ) : null}
             </TableSortLabel>
           </TableCell>
-         
         ))}
-         <TableCell>
-            Actions
-            
-      </TableCell>
+        <TableCell>Actions</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -223,16 +219,14 @@ interface EnhancedTableToolbarProps {
   numSelected: number;
 }
 
-
-
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const { numSelected } = props;
-  const navigate = useNavigate(); 
-       
-  const routeChange = () =>{ 
-          const path = `/app/controlcenter/Services`; 
-          navigate(path);
-        }
+  const navigate = useNavigate();
+
+  const routeChange = () => {
+    const path = `/app/controlcenter/Services`;
+    navigate(path);
+  };
 
   return (
     <Toolbar
@@ -241,7 +235,10 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
         }),
       }}
     >
@@ -255,45 +252,41 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           {numSelected} selected
         </Typography>
       ) : (
-        
         <Typography
           sx={{ flex: '1 1 100%' }}
           variant="h6"
           id="tableTitlParameter 'singleOption' implicitly has an 'any' typee"
           component="div"
         >
-         Container Instances
+          Container Instances
         </Typography>
-        
-      
       )}
       {numSelected > 0 ? (
         <>
-        <Tooltip title="Start Service">
-        <IconButton>
-          <PlayCircleOutlineRoundedIcon/>
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Stop Service">
-        <IconButton>
-          <PauseCircleOutlineRoundedIcon/>
-        </IconButton>
-      </Tooltip>
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Start Service">
+            <IconButton>
+              <PlayCircleOutlineRoundedIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Stop Service">
+            <IconButton>
+              <PauseCircleOutlineRoundedIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </>
       ) : (
         <>
-        <Tooltip title="Expanded view">
-          <IconButton 
-          onClick={routeChange}
-          >
-           <AssignmentRoundedIcon/>
-          </IconButton>
-        </Tooltip><TextField
+          <Tooltip title="Expanded view">
+            <IconButton onClick={routeChange}>
+              <AssignmentRoundedIcon />
+            </IconButton>
+          </Tooltip>
+          <TextField
             autoFocus
             margin="dense"
             id="name"
@@ -302,48 +295,44 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
             fullWidth
             variant="standard"
           />
-          </>
+        </>
       )}
     </Toolbar>
   );
 };
 
+export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
+  data,
+}) => {
+  const navigate = useNavigate();
 
-
-export const ContainerTable : React.FC<{data: ContainerData[]}> = ({ data }) => {
-
- 
-  const navigate = useNavigate(); 
-       
-  const routeChange = () =>{ 
-          const path = `/app/controlcenter/Services`; 
-          navigate(path);
-        }
+  const routeChange = () => {
+    const path = `/app/controlcenter/Services`;
+    navigate(path);
+  };
 
   const [open, setOpen] = React.useState(false);
-  const [logdata,setLogdata]=React.useState('');
+  const [logdata, setLogdata] = React.useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
-    
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   const [orderBy, setOrderBy] = React.useState<keyof ContainerData>('name');
   const [order, setOrder] = React.useState<Order>('asc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
-  const [searched, setSearched] = React.useState<string>("");
-  const [numSelected,setNums]= React.useState(0);
-  const [currLogs,setCurrLogs]=React.useState('');
-  
-  const [rows1,setRows1]=React.useState<ContainerData[]>(data);
-  
+  const [searched, setSearched] = React.useState<string>('');
+  const [numSelected, setNums] = React.useState(0);
+  const [currLogs, setCurrLogs] = React.useState('');
+
+  const [rows1, setRows1] = React.useState<ContainerData[]>(data);
 
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
@@ -373,57 +362,47 @@ export const ContainerTable : React.FC<{data: ContainerData[]}> = ({ data }) => 
         setLoading(false);
       }, 2000);
     }
-    getLogs(currLogs).then(res => {
+    getLogs(currLogs).then((res) => {
       setLogdata(res);
-    })
+    });
   };
- 
+
   React.useEffect(() => {
     setRows1(data);
-}, [data]);
+  }, [data]);
 
-React.useEffect(()=>{
-  setNums(selected.length);
-},[selected.length]);
+  React.useEffect(() => {
+    setNums(selected.length);
+  }, [selected.length]);
 
+  const getLogs = async (id) => {
+    let url = '/api/logs/?_id=';
+    url = url + id;
+    console.log(url);
+    try {
+      const data = await axios.get<string>(url);
 
-const getLogs=async(id)=>{
-
-  let url=url_backend+'/api/logs/?_id=';
-  url=url+id;
-  console.log(url);
-  try {
-    
-
-    const data = await axios.get<string>(
-      url
-    );
-          
-    return JSON.parse(JSON.stringify(data.data));
-    
-  } catch (e) {
-  
-    console.log(e);
-    return "cannot connect to container";
-  }
-}
-
-
+      return JSON.parse(JSON.stringify(data.data));
+    } catch (e) {
+      console.log(e);
+      return 'cannot connect to container';
+    }
+  };
 
   const requestSearch = (searchedVal: string) => {
-      const filteredRows = data.filter((row) => {
-        return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-      });
-      setRows1(filteredRows);
-    };
-  
-    const cancelSearch = () => {
-      setSearched("");
-      requestSearch(searched);
-    };
+    const filteredRows = data.filter((row) => {
+      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows1(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched('');
+    requestSearch(searched);
+  };
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof ContainerData,
+    property: keyof ContainerData
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -452,7 +431,7 @@ const getLogs=async(id)=>{
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -463,7 +442,9 @@ const getLogs=async(id)=>{
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -473,81 +454,88 @@ const getLogs=async(id)=>{
     navigate(path, { state: { id: name } });
   };
 
-  const handleContainerView =(event:React.MouseEvent<unknown>,name:string)=>{
+  const handleContainerView = (
+    event: React.MouseEvent<unknown>,
+    name: string
+  ) => {
     console.log(name);
     event.preventDefault();
     event.stopPropagation();
     routeChangeView(name);
   };
 
-  const handleRefresh=()=>{
+  const handleRefresh = () => {
     // window. location. reload();
-    getLogs(currLogs).then(res => {
+    getLogs(currLogs).then((res) => {
       setLogdata(res);
-    })
-  }
+    });
+  };
 
-  const handleContainerLogin=(event:React.MouseEvent<unknown>,name:string)=>{
+  const handleContainerLogin = (
+    event: React.MouseEvent<unknown>,
+    name: string
+  ) => {
     console.log(name);
     event.preventDefault();
     event.stopPropagation();
-  }
+  };
 
-  const handleContainerLogs=(event:React.MouseEvent<unknown>,name:string)=>{
+  const handleContainerLogs = (
+    event: React.MouseEvent<unknown>,
+    name: string
+  ) => {
     console.log(name);
     setCurrLogs(name);
     event.preventDefault();
     event.stopPropagation();
     handleClickOpen();
-    getLogs(name).then(res => {
-        setLogdata(res);
-      })
-    
-  }
+    getLogs(name).then((res) => {
+      setLogdata(res);
+    });
+  };
 
-  const startContainer=()=>{
+  const startContainer = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"start"
+      temp = {
+        name: item,
+        action: 'start',
       };
       actionContainer(temp);
     });
-  }
+  };
 
-  const stopContainer=()=>{
+  const stopContainer = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"stop"
+      temp = {
+        name: item,
+        action: 'stop',
       };
       actionContainer(temp);
     });
-  }
+  };
 
-
-  const deleteContainer=()=>{
+  const deleteContainer = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"remove"
+      temp = {
+        name: item,
+        action: 'remove',
       };
       actionContainer(temp);
     });
-  }
+  };
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
-    const classes = useStyles();
+  const classes = useStyles();
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -555,80 +543,78 @@ const getLogs=async(id)=>{
         {/* <EnhancedTableToolbar numSelected={selected.length} />
         <Paper sx={{ width:'20%',textAlign:'center'}}> */}
         <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(numSelected > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
         >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitlParameter 'singleOption' implicitly has an 'any' typee"
-          component="div"
-        >
-         Container Instances
-        </Typography>
-        
-      
-      )}
-      {numSelected > 0 ? (
-        <>
-        <Tooltip title="Start Container">
-        <IconButton onClick={startContainer}>
-          <PlayCircleOutlineRoundedIcon/>
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Stop Container" onClick={stopContainer}>
-        <IconButton>
-          <PauseCircleOutlineRoundedIcon/>
-        </IconButton>
-      </Tooltip>
-        <Tooltip title="Delete">
-          <IconButton onClick={deleteContainer}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-        </>
-      ) : (
-        <>
-        {/* <SearchBar
+          {numSelected > 0 ? (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {numSelected} selected
+            </Typography>
+          ) : (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              variant="h6"
+              id="tableTitlParameter 'singleOption' implicitly has an 'any' typee"
+              component="div"
+            >
+              Container Instances
+            </Typography>
+          )}
+          {numSelected > 0 ? (
+            <>
+              <Tooltip title="Start Container">
+                <IconButton onClick={startContainer}>
+                  <PlayCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Stop Container" onClick={stopContainer}>
+                <IconButton>
+                  <PauseCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete">
+                <IconButton onClick={deleteContainer}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : (
+            <>
+              {/* <SearchBar
         value={searched}
         onChange={(searchVal) => requestSearch(searchVal)}
         onCancelSearch={() => cancelSearch()}
         
         /> */}
-        <Tooltip title="Expanded view">
-          <IconButton 
-          onClick={routeChange}
-          >
-           <AssignmentRoundedIcon/>
-          </IconButton>
-        </Tooltip>
-        </>
-      )}
-    </Toolbar>
-        
-    {/* <ThemeProvider theme={theme}> */}
+              <Tooltip title="Expanded view">
+                <IconButton onClick={routeChange}>
+                  <AssignmentRoundedIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
+        </Toolbar>
+
+        {/* <ThemeProvider theme={theme}> */}
         <TableContainer>
           <Table
             sx={{ minWidth: 70 }}
             aria-labelledby="tableTitle"
-            size='small'
+            size="small"
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -641,7 +627,9 @@ const getLogs=async(id)=>{
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
               rows.slice().sort(getComparator(order, orderBy)) */}
-              {rows1.slice().sort(getComparator(order, orderBy))
+              {rows1
+                .slice()
+                .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -656,11 +644,13 @@ const getLogs=async(id)=>{
                       tabIndex={-1}
                       key={row.name}
                       selected={isItemSelected}
-                      sx={{padding:"checkbox"}}
+                      sx={{ padding: 'checkbox' }}
                       className={classes.tableRow}
-                      
                     >
-                      <TableCell padding="checkbox" className={classes.tableCell}>
+                      <TableCell
+                        padding="checkbox"
+                        className={classes.tableCell}
+                      >
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -679,30 +669,35 @@ const getLogs=async(id)=>{
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="left"
-                      className={classes.tableCell}>{row.host}</TableCell>
-                      <TableCell align="left"
-                      className={classes.tableCell}
-                      >
+                      <TableCell align="left" className={classes.tableCell}>
+                        {row.host}
+                      </TableCell>
+                      <TableCell align="left" className={classes.tableCell}>
                         <Tooltip title="View">
                           <IconButton
-                          onClick={(event) => handleContainerView(event, row._id)}
+                            onClick={(event) =>
+                              handleContainerView(event, row._id)
+                            }
                           >
-                            <VisibilityIcon sx={{ fontSize: 20 }}/>
+                            <VisibilityIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Login">
-                          <IconButton 
-                          onClick={(event) => handleContainerLogin(event, row._id)}
+                          <IconButton
+                            onClick={(event) =>
+                              handleContainerLogin(event, row._id)
+                            }
                           >
-                            <LoginSharpIcon sx={{ fontSize: 20 }}/>
+                            <LoginSharpIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Check Logs">
-                          <IconButton 
-                          onClick={(event) => handleContainerLogs(event, row.name)}
+                          <IconButton
+                            onClick={(event) =>
+                              handleContainerLogs(event, row.name)
+                            }
                           >
-                            <InsertDriveFileIcon sx={{ fontSize: 20 }}/>
+                            <InsertDriveFileIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
                       </TableCell>
@@ -733,43 +728,46 @@ const getLogs=async(id)=>{
         />
       </Paper>
       <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Container Log</DialogTitle>
-        <DialogContent>
-         
-          
-        
-          <Box bgcolor={"#eeeeee"} sx={{p:2}} >
-          <DialogContentText>
-          <Typography sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap'}} color="red" >
-            {logdata}
-          </Typography>
-          </DialogContentText>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Box>
-          <Button onClick={handleButtonClick}>Refresh</Button>
-          {loading && (
-          <CircularProgress
-            size={24}
-            sx={{
-              color: green[500],
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              marginTop: '-12px',
-              marginLeft: '-12px',
-            }}
-          />
-        )}
-          </Box>
-        </DialogActions>
-      </Dialog>
-    </div>
-     
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Container Log</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                  }}
+                  color="red"
+                >
+                  {logdata}
+                </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+            <Box>
+              <Button onClick={handleButtonClick}>Refresh</Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    color: green[500],
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    marginTop: '-12px',
+                    marginLeft: '-12px',
+                  }}
+                />
+              )}
+            </Box>
+          </DialogActions>
+        </Dialog>
+      </div>
     </Box>
-   
   );
-}
+};

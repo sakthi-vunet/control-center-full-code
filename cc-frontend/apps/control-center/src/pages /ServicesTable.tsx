@@ -25,7 +25,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import url_backend from '../configs/url';
 
 export interface ServiceData {
   _id: string;
@@ -39,25 +38,20 @@ export interface ServiceData {
   labels: string[];
 }
 
-const actionService =async (data) =>{
-    
-  const request_url=url_backend+'/api/services/';
-  
-  try {
+const actionService = async (data) => {
+  const request_url = '/api/services/';
 
-      const response = await axios({
-      method: "put",
+  try {
+    const response = await axios({
+      method: 'put',
       url: request_url,
       data: JSON.stringify(data),
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     console.log(response);
-  
-  } catch(error) {
-  
+  } catch (error) {
     console.log(error);
   }
- 
 };
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -214,7 +208,6 @@ interface EnhancedTableToolbarProps {
 
 // const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 //   const { numSelected } = props;
-  
 
 //   return (
 //     <Toolbar
@@ -278,17 +271,16 @@ interface EnhancedTableToolbarProps {
 //   );
 // };
 
-
 export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   data,
 }) => {
   const navigate = useNavigate();
-  
+
   const routeChangeView = (name: string) => {
     const path = `/app/controlcenter/ServicesInfo`;
     navigate(path, { state: { id: name } });
   };
-  
+
   const routeChangeEdit = (name: string) => {
     const path = `/app/controlcenter/EditServices`;
     navigate(path, { state: { id: name } });
@@ -306,17 +298,14 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searched, setSearched] = React.useState<string>('');
-  const [numSelected,setNums]= React.useState(0);
+  const [numSelected, setNums] = React.useState(0);
 
   const [rows1, setRows1] = React.useState<ServiceData[]>(data);
-
 
   React.useEffect(() => {
     setRows1(data);
     setNums(selected.length);
-  }, [data,selected.length]);
-
- 
+  }, [data, selected.length]);
 
   const requestSearch = (searchedVal: string) => {
     const filteredRows = data.filter((row) => {
@@ -399,29 +388,29 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     routeChangeEdit(name);
   };
 
-  const startService=()=>{
+  const startService = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"start"
+      temp = {
+        name: item,
+        action: 'start',
       };
       actionService(temp);
     });
-  }
+  };
 
-  const stopService=()=>{
+  const stopService = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"stop"
+      temp = {
+        name: item,
+        action: 'stop',
       };
       actionService(temp);
     });
-  }
+  };
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -438,87 +427,81 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
         </Paper>
         <span style={{ marginLeft: '.5rem' }} /> */}
         <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        })
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(numSelected > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
         >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-         Services
-        </Typography>
-        
-      
-      )}
-      {numSelected > 0 ? (
-        <>
-          <Tooltip title="Start Service">
-            <IconButton onClick={startService}>
-              <PlayCircleOutlineRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Stop Service">
-            <IconButton onClick={stopService}>
-              <PauseCircleOutlineRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </>
-      ) : (
-        
-        <>
+          {numSelected > 0 ? (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {numSelected} selected
+            </Typography>
+          ) : (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Services
+            </Typography>
+          )}
+          {numSelected > 0 ? (
+            <>
+              <Tooltip title="Start Service">
+                <IconButton onClick={startService}>
+                  <PlayCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Stop Service">
+                <IconButton onClick={stopService}>
+                  <PauseCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete">
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : (
+            <>
+              {/* <SearchBar
+            value={searched}
+            onChange={(searchVal) => requestSearch(searchVal)}
+            onCancelSearch={() => cancelSearch()}
+          /> */}
+              <Tooltip title="Expanded view">
+                <IconButton onClick={routeChangeContainer}>
+                  <AssignmentRoundedIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
+          {/* <SearchBar
+            value={searched}
+            onChange={(searchVal) => requestSearch(searchVal)}
+            onCancelSearch={() => cancelSearch()}
+          /> */}
+        </Toolbar>
         {/* <SearchBar
             value={searched}
             onChange={(searchVal) => requestSearch(searchVal)}
             onCancelSearch={() => cancelSearch()}
           /> */}
-        <Tooltip title="Expanded view">
-          <IconButton onClick={routeChangeContainer}>
-            <AssignmentRoundedIcon />
-          </IconButton>
-        </Tooltip>
-        </>
-
-      )}
-       {/* <SearchBar
-            value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
-            onCancelSearch={() => cancelSearch()}
-          /> */}
-    </Toolbar>
-    {/* <SearchBar
-            value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
-            onCancelSearch={() => cancelSearch()}
-          /> */}
-    <Paper sx={{ width:'20%',textAlign:'center'}}>
-        
-
-     
-        </Paper>
+        <Paper sx={{ width: '20%', textAlign: 'center' }}></Paper>
         <TableContainer>
           <Table
             sx={{ minWidth: 70 }}
@@ -573,7 +556,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="left" >{row.type}</TableCell>
+                      <TableCell align="left">{row.type}</TableCell>
                       <TableCell align="left">
                         {JSON.stringify(row.actual_instances) +
                           '/' +

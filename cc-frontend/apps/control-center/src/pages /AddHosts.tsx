@@ -1,14 +1,12 @@
-import { Paper, Typography } from "@material-ui/core";
-import { FormProvider, useForm } from "react-hook-form";
-import { FormInputText } from "../form-components/FormInputText";
-import { FormInputMultiCheckbox } from "../form-components/FormMultiCheckbox";
-import { FormInputRadio } from "../form-components/FormInputRadio";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+import { Paper, Typography } from '@material-ui/core';
+import { FormProvider, useForm } from 'react-hook-form';
+import { FormInputText } from '../form-components/FormInputText';
+import { FormInputMultiCheckbox } from '../form-components/FormMultiCheckbox';
+import { FormInputRadio } from '../form-components/FormInputRadio';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import axios from 'axios';
-import url_backend from "../configs/url";
-
 
 interface IFormInput {
   name: string;
@@ -22,80 +20,72 @@ interface IFormInput {
   memory: string;
   total_storage: string;
   storage: string;
-  mount_point:string;
+  mount_point: string;
 }
 
 const defaultValues = {
-  name: "",
-  description: "",
-  Ipaddress: "",
-  host_type: "",
+  name: '',
+  description: '',
+  Ipaddress: '',
+  host_type: '',
   labels: [],
-  OS: "",
+  OS: '',
   number_of_cores: 0,
-  processor_type: "",
-  memory: "",
-  total_storage: "",
-  storage:"",
-  mount_point:""
+  processor_type: '',
+  memory: '',
+  total_storage: '',
+  storage: '',
+  mount_point: '',
 };
 const options = [
   {
-    label: "Web",
-    value: "Web",
+    label: 'Web',
+    value: 'Web',
   },
   {
-    label: "App",
-    value: "App",
-
+    label: 'App',
+    value: 'App',
   },
   {
-    label: "DB",
-    value: "DB",
-
+    label: 'DB',
+    value: 'DB',
   },
   {
-    label: "Common",
-    value: "Common",
-
+    label: 'Common',
+    value: 'Common',
   },
-  
 ];
 export const AddHosts = () => {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const {  handleSubmit,reset, control, setValue, watch } = methods;
+  const { handleSubmit, reset, control, setValue, watch } = methods;
 
-  const request_url=url_backend+'/api/hosts/';
-  const onSubmit =async (data: IFormInput) =>{
-    
+  const request_url = '/api/hosts/';
+  const onSubmit = async (data: IFormInput) => {
     console.log(JSON.stringify(data));
     try {
       // make axios post request
       const response = await axios({
-        method: "post",
+        method: 'post',
         url: request_url,
         data: JSON.stringify(data),
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       console.log(response);
-    
-    } catch(error) {
-    
+    } catch (error) {
       console.log(error);
     }
-    alert("Host is successfully addded");
+    alert('Host is successfully addded');
 
     window.location.reload();
   };
 
-
   return (
     <Paper
       style={{
-        display: "grid",
-        gridRowGap: "20px",
-        padding: "20px",
-        margin: "10px 300px",
+        display: 'grid',
+        gridRowGap: '20px',
+        padding: '20px',
+        margin: '10px 300px',
       }}
       elevation={3}
     >
@@ -110,21 +100,20 @@ export const AddHosts = () => {
       <FormInputText name="Ipaddress" control={control} label="IP Address" />
       <FormInputText name="OS" control={control} label="Host OS" />
       <FormInputRadio
-        name={"host_type"}
+        name={'host_type'}
         control={control}
-        label={"Type of host"}
+        label={'Type of host'}
         options={options}
       />
 
       <FormInputMultiCheckbox
         control={control}
         setValue={setValue}
-        name={"labels"}
-        label={"Labels"}
+        name={'labels'}
+        label={'Labels'}
       />
-     
-        
-        <Box
+
+      <Box
         component="span"
         m={1}
         display="flex"
@@ -136,22 +125,21 @@ export const AddHosts = () => {
           control={control}
           label="Number of cores"
         />
-         <FormInputText name="memory" control={control} label="Memory" />
+        <FormInputText name="memory" control={control} label="Memory" />
       </Box>
       <Box
         component="span"
         m={1}
         display="flex"
         justifyContent="space-between"
-        alignItems="center" 
+        alignItems="center"
       >
-       
         <FormInputText
           name="processor_type"
           control={control}
           label="Type of Processor"
         />
-         <FormInputText
+        <FormInputText
           name="total_storage"
           control={control}
           label="Total storage"
@@ -162,24 +150,22 @@ export const AddHosts = () => {
         m={1}
         display="flex"
         justifyContent="space-between"
-        alignItems="center" 
+        alignItems="center"
       >
-       
         <FormInputText
           name="storage"
           control={control}
           label="Mount point storage"
         />
-         <FormInputText
+        <FormInputText
           name="mount_point"
           control={control}
           label="Mount point"
         />
-       
       </Box>
-     
+
       <Stack direction="row" spacing={2} display="flex">
-        <Button  onClick={handleSubmit(onSubmit)} variant="contained">
+        <Button onClick={handleSubmit(onSubmit)} variant="contained">
           Submit
         </Button>
         <Button onClick={() => reset()} variant="contained">

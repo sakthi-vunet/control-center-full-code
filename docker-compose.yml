@@ -1,10 +1,10 @@
 version: "3.9"
-   
+
 services:
   db:
     volumes:
       # - /home/vunet:/var/lib/mysql
-      - /home/sakthi/testappsql:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d
     container_name: mysql_container_cc
     # command:  --init-file /docker-entrypoint-initdb.d/backup.sql  #attention here
     # command: --default-authentication-plugin=mysql_native_password
@@ -17,16 +17,14 @@ services:
       # MYSQL_USER: root
     ports:
       - "3307:3306"
-    
     networks:
       - cc-backend-app
-    
+
   web:
-    
     build:
-        context: .
-        
-        dockerfile: Dockerfile_backend
+      context: .
+
+      dockerfile: Dockerfile_backend
     # command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./cc-backend:/code
@@ -34,14 +32,11 @@ services:
       - /usr/bin/ping:/usr/bin/ping
       - /usr/bin/telnet:/usr/bin/telnet
       - /usr/bin/ssh-keygen:/usr/bin/ssh-keygen
-    ports:
-      - "8000:8000"
     environment:
       MYSQL_ROOT_PASSWORD: helloworld
       MYSQL_DATABASE: testapp
-    
+
     container_name: cc-django
-    hostname: www.controlcenter.com
     networks:
       - cc-backend-app
     depends_on:
@@ -49,9 +44,8 @@ services:
 
   front-end:
     build:
-        context: .
-        
-        dockerfile: Dockerfile_frontend
+      context: .
+      dockerfile: Dockerfile_frontend
     volumes:
       - ./cc-frontend:/react-ui
     ports:

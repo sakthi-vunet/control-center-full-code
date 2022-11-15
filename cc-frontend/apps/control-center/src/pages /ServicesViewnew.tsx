@@ -16,7 +16,6 @@ import Paper from '@material-ui/core/Paper';
 import { ServiceData } from './ServicesTable';
 import { HostsData } from './HostsTable';
 import axios from 'axios';
-import url_backend from '../configs/url';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -64,32 +63,30 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
       setExpanded(newExpanded ? panel : false);
     };
 
-    const [hostsdata, sethostsData] = React.useState<HostsData[]>([]);
-    const request_url=url_backend+'/api/hosts/';
-    const getHostsData = async () => {
-        try {
-          const data = await axios.get<HostsData[]>(
-            request_url
-          );
-    
-          sethostsData(data.data);
-        } catch (e) {
-          console.log(e);
-        }
-      };
-      React.useEffect(() => {
-        getHostsData();
-      }, []);
-      const returnInstance = (temp: HostsData, serviceName: string) => {
-        let currentInstance = 0;
-        temp.services.forEach(({ Name, Instances }) => {
-          if (Name === serviceName) {
-            console.log(Name, Instances);
-            currentInstance = Instances;
-          }
-        });
-        return currentInstance;
-      };
+  const [hostsdata, sethostsData] = React.useState<HostsData[]>([]);
+  const request_url = '/api/hosts/';
+  const getHostsData = async () => {
+    try {
+      const data = await axios.get<HostsData[]>(request_url);
+
+      sethostsData(data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  React.useEffect(() => {
+    getHostsData();
+  }, []);
+  const returnInstance = (temp: HostsData, serviceName: string) => {
+    let currentInstance = 0;
+    temp.services.forEach(({ Name, Instances }) => {
+      if (Name === serviceName) {
+        console.log(Name, Instances);
+        currentInstance = Instances;
+      }
+    });
+    return currentInstance;
+  };
 
   return (
     <>
@@ -114,7 +111,15 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
             <Typography>Service Type</Typography>
             <span style={{ marginLeft: '.5rem' }} />
             <Paper variant="outlined" elevation={8}>
-              <Typography variant="subtitle1" sx={{ paddingTop: '.3rem',paddingBottom:'.3rem',paddingRight:'0.8rem',paddingLeft:'.8rem' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  paddingTop: '.3rem',
+                  paddingBottom: '.3rem',
+                  paddingRight: '0.8rem',
+                  paddingLeft: '.8rem',
+                }}
+              >
                 {row.type}
               </Typography>
             </Paper>
