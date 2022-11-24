@@ -18,7 +18,7 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from "material-ui-search-bar";
+import SearchBar from '@mkyy/mui-search-bar';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
@@ -28,6 +28,7 @@ import { HostsEditLanding } from './HostsEditLanding';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -35,7 +36,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import url_backend from '../configs/url';
-import { request } from 'https';
+
+
+
+
 
 export interface HostsData{
   _id:               string;
@@ -355,7 +359,7 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
     // console.log(JSON.stringify(hostobj));
     if(JSON.stringify(hostobj['services'])===JSON.stringify([])){
       alert('host has no service running on it. Deletion will be done');
-      deleteHost('delete '+hostobj['name']);
+      deleteHost('delete$'+hostobj['name']);
 
     }
     else{
@@ -521,12 +525,10 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
        
       ) : (
         <>
-        {/* <SearchBar
+        <SearchBar
         value={searched}
         onChange={(searchVal) => requestSearch(searchVal)}
-        onCancelSearch={() => cancelSearch()}
-      
-        /> */}
+        />
        <Tooltip title="Add Host">
           <IconButton onClick={routeChangeAddHosts}>
            <AddCircleOutlineRoundedIcon/>
@@ -565,6 +567,7 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
               onRequestSort={handleRequestSort}
               rowCount={rows1.length}
             />
+           
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
               rows.slice().sort(getComparator(order, orderBy)) */}
@@ -584,10 +587,10 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
                       key={row.name}
                       selected={isItemSelected}
                       //   sx={{padding:"checkbox"}}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 }, whiteSpace: 'nowrap'}}
                       
                     >
-                      <TableCell padding="checkbox" width='5%'>
+                      <TableCell padding="checkbox" >
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -602,16 +605,16 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
                         scope="row"
                         padding="checkbox"
                         align="left"
-                        width='25%'
+                        
                       >
                         {row.name}
                       </TableCell>
 
-                      <TableCell align="left" width='5%'>{JSON.stringify(row.Running_services)+'/'+JSON.stringify(row.Running_instances)}</TableCell>
-                      <TableCell align="left" width='25%'>{getServices(row.services)}</TableCell>
-                      <TableCell align="left" width='5%'>{row.health_status}</TableCell>
+                      <TableCell align="left" >{JSON.stringify(row.Running_services)+'/'+JSON.stringify(row.Running_instances)}</TableCell>
+                      <TableCell align="left">{getServices(row.services)}</TableCell>
+                      <TableCell align="left" >{row.health_status}</TableCell>
                       
-                      <TableCell align="left" width='25%'>
+                      <TableCell align="left" >
 
                         <Tooltip title="Hosts Detail">
                           <IconButton

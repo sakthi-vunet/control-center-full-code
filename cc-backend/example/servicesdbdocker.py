@@ -86,4 +86,4 @@ def get_service_data():
     print(final)
     return final
 
-get_service_data()
+# get_service_data()

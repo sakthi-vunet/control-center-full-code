@@ -1,19 +1,12 @@
 import sqlalchemy as db
 import json
 import pandas as pd
+from . import db_config
 
 def insert_hosts(host_item):
 
     
-    config = {
-        # 'host': '172.24.0.2',
-        # 'host': 'db',
-        'host':'mysql_container_cc',
-        'port': '3306',
-        'user': 'root',
-        'password': 'helloworld',
-        'database': 'testapp'
-    }
+    config = db_config.config
     db_user = config.get('user')
     db_pwd = config.get('password')
     db_host = config.get('host')

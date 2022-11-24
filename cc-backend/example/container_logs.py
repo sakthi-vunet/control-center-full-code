@@ -2,9 +2,24 @@ import datetime
 import docker
 import socket
 import paramiko
-
+import subprocess
+import sys
 
 def get_container_logs(service_name):
+    # # return subprocess.check_output('sudo python ./su_logs.py')
+    # log_list=subprocess.check_output(['python','su_logs.py',service_name]).decode(sys.stdout.encoding)
+    # log_string=""
+    # for log in log_list:
+    #     log_string+=log
+    # print(log_string)
+    # return log_string
+    result=get_logs(service_name)
+    print(result)
+    return result
+
+
+
+def get_logs(service_name):
     curr_hostname=socket.gethostname()
     client2 = docker.DockerClient(base_url='unix://var/run/docker.sock')
     client = docker.APIClient(base_url='unix://var/run/docker.sock')
@@ -35,7 +50,9 @@ def get_container_logs(service_name):
                     # HostKeys object(in case of missing)
                     # AutoAddPolicy for missing host key to be set before connection setup.
                     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                    ssh.connect(hostname,  username='sakthi', password='Lucky@2002', timeout=3)
+                    
+                    # ssh.connect(hostname,  username='sakthi', password='Lucky@2002')
+                    ssh.connect('192.168.8.113',  username='sakthi', password='Lucky@2002')
                     # Execute command on SSH terminal
                     # using exec_command
                     # get container id
@@ -43,7 +60,7 @@ def get_container_logs(service_name):
                     stdin, stdout, stderr = ssh.exec_command(cmd)
                     containerid=stdout.readlines()
                     # get logs using containerid
-                    cmd='docker logs '+containerid[0][:-1]
+                    cmd='docker logs -n=10 '+containerid[0][:-1]
                     stdin, stdout, stderr = ssh.exec_command(cmd)
                     logs=stdout.readlines()
                     return logs
@@ -51,4 +68,4 @@ def get_container_logs(service_name):
                 return "Not Running"
 
 
-                                                                                       
+

@@ -7,19 +7,21 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import { FormInputMultiCheckbox } from '../form-components/FormMultiCheckbox';
 import {useForm } from "react-hook-form";
 import axios from 'axios';
-// import { HostsData } from './HostsTable';
 import url_backend from '../configs/url';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import Tooltip from '@mui/material/Tooltip';
+import {IconButton} from '@mui/material';
 
 export interface HostsData{
   _id:               string;
@@ -92,7 +94,7 @@ export interface IFormInput{
 
 export const EditHosts: React.FC<{data:HostsData[]}>=({data})=> {
 
-    // const temp=data[0].labels;
+   
     const defaultValues={labels:[]};
     const methods = useForm<IFormInput>({ defaultValues: defaultValues });
     const { handleSubmit, control, setValue} = methods;
@@ -148,6 +150,19 @@ export const EditHosts: React.FC<{data:HostsData[]}>=({data})=> {
     component="div"
   >
    Hosts {'>>'} {row.name}
+   {row.health_status === 'Healthy' ? (
+              <Tooltip title="Healthy">
+                <IconButton>
+                  <HealthAndSafetyIcon color="success" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Not Healthy">
+                <IconButton>
+                  <HealthAndSafetyIcon color="disabled" />
+                </IconButton>
+              </Tooltip>
+            )}
   </Typography>
 
 <span style={{marginLeft:'.5rem'}}/>
@@ -255,20 +270,10 @@ export const EditHosts: React.FC<{data:HostsData[]}>=({data})=> {
       </AccordionDetails>
     </Accordion>
     
+   
+   
     <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
       <AccordionSummary aria-controls="panel4d-content" id="panel4d-header">
-        <Typography>Health</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography >
-        {row.health_status}
-        {/* Expanding this table will show the server health dashboard for the host. */}
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
-   
-    <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
-      <AccordionSummary aria-controls="panel5d-content" id="panel5d-header">
         <Typography>Connect</Typography>
       </AccordionSummary>
       <AccordionDetails>

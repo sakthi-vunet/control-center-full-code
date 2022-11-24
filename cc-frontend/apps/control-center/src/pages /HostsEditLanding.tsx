@@ -6,6 +6,38 @@ import * as React from 'react';
 import { EditHosts } from "./HostsEdit";
 import {useLocation} from 'react-router-dom';
 import url_backend from "../configs/url";
+import { usePromiseTracker } from "react-promise-tracker";
+import { trackPromise } from 'react-promise-tracker';
+import {ThreeDots} from 'react-loader-spinner';
+
+
+export const LoadingIndicator = () => {
+
+  const { promiseInProgress } = usePromiseTracker();
+  
+ return (
+  
+  promiseInProgress ? (
+  // <h1>Hey some async call in progress ! </h1>
+  <div
+     style={{
+        width: "100%",
+        height: "100",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+     <ThreeDots 
+	color={'blue'} 
+	height={150} 
+	width={150} 
+	/>
+    </div>
+  ):(<></>)
+  
+  );  
+}
 
 export type HostsInfoprops={
   id?: string;
@@ -67,15 +99,16 @@ export const HostsEditLanding =(props:HostsInfoprops)=>{
     };
   
   React.useEffect(() => {
-      getProductData();
+     trackPromise(getProductData());
   },[] );
   
   console.log("After use effect"+data);
 
   return (
+    <>
     <Box
       component="main"
-      sx={{ flexGrow: 1, p: 3, display:'flex'}}>
+      sx={{ flexGrow: 1, p: 0.05, display:'flex'}}>
      
       <Toolbar />
   {/* <h1>Hello</h1> */}
@@ -83,6 +116,8 @@ export const HostsEditLanding =(props:HostsInfoprops)=>{
     <EditHosts data={data} />
     
 </Box>
+<LoadingIndicator/>
+</>
      
   );
 };

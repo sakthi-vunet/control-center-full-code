@@ -59,7 +59,7 @@ ROOT_URLCONF = 'jsonexample.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -104,6 +104,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# LOGGING = {
+#     'version': 1,                       # the dictConfig format version
+#     'disable_existing_loggers': False,  # retain the default loggers
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -134,3 +138,7 @@ SESSION_COOKIE_SAMESITE = "None"
 CORS_ALLOW_CREDENTIALS = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+LOGIN_REDIRECT_URL = 'http://control-center_front-end_1:4200/app/controlcenter/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

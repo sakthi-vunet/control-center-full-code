@@ -20,12 +20,13 @@ import { visuallyHidden } from '@mui/utils';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
 import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from 'material-ui-search-bar';
+import SearchBar from '@mkyy/mui-search-bar';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import url_backend from '../configs/url';
+
 
 export interface ServiceData {
   _id: string;
@@ -212,71 +213,6 @@ interface EnhancedTableToolbarProps {
   numSelected: number;
 }
 
-// const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-//   const { numSelected } = props;
-  
-
-//   return (
-//     <Toolbar
-//       sx={{
-//         pl: { sm: 2 },
-//         pr: { xs: 1, sm: 1 },
-//         ...(numSelected > 0 && {
-//           bgcolor: (theme) =>
-//             alpha(
-//               theme.palette.primary.main,
-//               theme.palette.action.activatedOpacity
-//             ),
-//         }),
-//       }}
-//     >
-//       {numSelected > 0 ? (
-//         <Typography
-//           sx={{ flex: '1 1 100%' }}
-//           color="inherit"
-//           variant="subtitle1"
-//           component="div"
-//         >
-//           {numSelected} selected
-//         </Typography>
-//       ) : (
-//         <Typography
-//           sx={{ flex: '1 1 100%' }}
-//           variant="h6"
-//           id="tableTitle"
-//           component="div"
-//         >
-//           Services
-//         </Typography>
-//       )}
-//       {numSelected > 0 ? (
-//         <>
-//           <Tooltip title="Start Service">
-//             <IconButton>
-//               <PlayCircleOutlineRoundedIcon />
-//             </IconButton>
-//           </Tooltip>
-//           <Tooltip title="Stop Service">
-//             <IconButton>
-//               <PauseCircleOutlineRoundedIcon />
-//             </IconButton>
-//           </Tooltip>
-//           <Tooltip title="Delete">
-//             <IconButton>
-//               <DeleteIcon />
-//             </IconButton>
-//           </Tooltip>
-//         </>
-//       ) : (
-//         <Tooltip title="Expanded view">
-//           <IconButton onClick={routeChangeContainer}>
-//             <AssignmentRoundedIcon />
-//           </IconButton>
-//         </Tooltip>
-//       )}
-//     </Toolbar>
-//   );
-// };
 
 
 export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
@@ -428,6 +364,13 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
+  const checkRunning=(expected:number,actual:number)=>{
+    if(actual<expected)
+      return false
+    else
+      return true
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} elevation={3}>
@@ -490,11 +433,10 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
       ) : (
         
         <>
-        {/* <SearchBar
+        <SearchBar
             value={searched}
             onChange={(searchVal) => requestSearch(searchVal)}
-            onCancelSearch={() => cancelSearch()}
-          /> */}
+        />
         <Tooltip title="Expanded view">
           <IconButton onClick={routeChangeContainer}>
             <AssignmentRoundedIcon />
@@ -503,17 +445,9 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
         </>
 
       )}
-       {/* <SearchBar
-            value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
-            onCancelSearch={() => cancelSearch()}
-          /> */}
+       
     </Toolbar>
-    {/* <SearchBar
-            value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
-            onCancelSearch={() => cancelSearch()}
-          /> */}
+    
     <Paper sx={{ width:'20%',textAlign:'center'}}>
         
 
@@ -543,6 +477,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const colorRunning=checkRunning(row.expected_instances,row.actual_instances);
 
                   return (
                     <TableRow
@@ -553,7 +488,12 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                       tabIndex={-1}
                       key={row.name}
                       selected={isItemSelected}
-                      sx={{ padding: 'checkbox' }}
+                      sx={{ padding: 'checkbox',                      
+                            backgroundColor: (colorRunning?'#6fbf73':'#f6685e'),
+                            // "& th": {
+                            //   color:  (colorRunning?'green':'red')
+                            // }
+                      }}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
@@ -573,17 +513,17 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="left" >{row.type}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left"  component="th" >{row.type}</TableCell>
+                      <TableCell align="left"  component="th">
                         {JSON.stringify(row.actual_instances) +
                           '/' +
                           JSON.stringify(row.expected_instances)}
                       </TableCell>
-                      <TableCell align="left">{row.hosts.length}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left"  component="th">{row.hosts.length}</TableCell>
+                      <TableCell align="left"  component="th">
                         {JSON.stringify(row.hosts, null, 2)}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left"  component="th">
                         <Tooltip title="Services Detail">
                           <IconButton
                             onClick={(event) =>

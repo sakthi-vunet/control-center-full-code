@@ -72,9 +72,9 @@ def get_containers_dbdocker():
         result.append(container_data)
     
     final=json.dumps(result,indent=2)
-    print(final)
+    # print(final)
     # with open(r'/home/sakthi/Downloads/cc-backend/jsondata/vsmaps_containers.json', 'w') as fp:
     #     fp.write(final)
     return final
 
-get_containers_dbdocker()
+# get_containers_dbdocker()

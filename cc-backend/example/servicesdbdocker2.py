@@ -62,7 +62,6 @@ def get_service_data():
         result.append(data)
     
     final=json.dumps(result,indent=2)
-    print(final)
+    # print(final)
     return final
 
-get_service_data()

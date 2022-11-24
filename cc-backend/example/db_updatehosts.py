@@ -3,19 +3,13 @@ import json
 import pandas as pd
 import numpy as np
 from python_on_whales import docker
+from . import db_config
+
 
 def update_hosts(host_item):
 
     
-    config = {
-        # 'host': '172.24.0.2',
-        'host':'mysql_container_cc',
-        # 'host': 'db',
-        'port': '3306',
-        'user': 'root',
-        'password': 'helloworld',
-        'database': 'testapp'
-    }
+    config = db_config.config
     db_user = config.get('user')
     db_pwd = config.get('password')
     db_host = config.get('host')

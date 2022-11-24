@@ -17,6 +17,7 @@
     "@material-ui/data-grid": "^4.0.0-alpha.37",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
+    "@mkyy/mui-search-bar": "^0.5.2",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.7",
     "@mui/styles": "^5.9.3",
@@ -31,6 +32,8 @@
     "react-alert": "^7.0.3",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.34.0",
+    "react-loader-spinner": "^5.3.4",
+    "react-promise-tracker": "^2.1.1",
     "react-router-dom": "^6.3.0",
     "regenerator-runtime": "0.13.7",
     "tslib": "^2.3.0"

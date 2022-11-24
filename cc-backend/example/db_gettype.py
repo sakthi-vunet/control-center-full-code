@@ -1,16 +1,8 @@
 import sqlalchemy as db  
-
+from . import db_config
     
 def get_service_type(servicename):
-    config = {
-        # 'host': '172.21.0.2',
-        'host':'mysql_container_cc',
-        # 'host': 'db',
-        'port': '3306',
-        'user': 'root',
-        'password': 'helloworld',
-        'database': 'testapp'
-    }
+    config = db_config.config
     db_user = config.get('user')
     db_pwd = config.get('password')
     db_host = config.get('host')

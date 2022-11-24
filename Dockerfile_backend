@@ -13,6 +13,11 @@ RUN pip install django ptvsd
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN mkdir /code/
+RUN mkdir /var/log/cc-logs/
+RUN touch /var/log/cc-logs/generator.log
+RUN chmod 777 /var/log/cc-logs/generator.log
+
+
 
 WORKDIR /code/
 COPY ./cc-backend/requirements.txt /code
@@ -31,5 +36,6 @@ RUN a2enmod lbmethod_byrequests
 RUN service apache2 start
 # RUN service apache2 reload
 EXPOSE 8080 3500
+
 CMD ["apache2ctl", "-D", "FOREGROUND"]
 

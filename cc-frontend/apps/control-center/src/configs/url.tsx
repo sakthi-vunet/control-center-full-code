@@ -1,4 +1,4 @@
 
-const url_backend='http://cc-django:8080'
+const url_backend=''
 
 export default url_backend;

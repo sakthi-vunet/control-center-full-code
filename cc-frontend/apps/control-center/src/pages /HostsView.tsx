@@ -7,44 +7,43 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Box from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Box, { IconButton } from '@mui/material';
 import { Button } from '@mui/material';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import Tooltip from '@mui/material/Tooltip';
 
-
-export interface HostsData{
-  _id:               string;
-  name:              string;
-  description:       string;
-  OS:                string;
-  Running_services:  number;
+export interface HostsData {
+  _id: string;
+  name: string;
+  description: string;
+  OS: string;
+  Running_services: number;
   Running_instances: number;
-  health_status:     string;
-  services:          Service[];
-  labels:            string[];
-  number_of_cores:   number;
-  processor_type:    string;
-  memory:            string;
-  total_storage:     string;
-  storage_mounts:    StorageMount[];
+  health_status: string;
+  services: Service[];
+  labels: string[];
+  number_of_cores: number;
+  processor_type: string;
+  memory: string;
+  total_storage: string;
+  storage_mounts: StorageMount[];
 }
 
 export interface Service {
-  Name:      string;
+  Name: string;
   Instances: number;
 }
 
 export interface StorageMount {
   Mount_point: string;
-  Storage:     string;
+  Storage: string;
 }
-
-
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -82,149 +81,169 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-
-
-export const ControlledAccordions: React.FC<{data:HostsData[]}>=({data})=> {
-  
+export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
+  data,
+}) => {
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
-  
+
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
-  
-  const handleHostConnect=()=>{
-    console.log(" connect to host");
-  }
 
-  
-  return <>{
-   
-    data.map((row,index)=><div>
-    <Typography
-    sx={{ flex: '1 1 100%' }}
-    variant="h6"
-    id="tableTitle"
-    component="div"
-  >
-   Hosts {'>>'} {row.name}
-  </Typography>
+  const handleHostConnect = () => {
+    console.log(' connect to host');
+  };
 
-<span style={{marginLeft:'.5rem'}}/>
+  return (
+    <>
+      {data.map((row, index) => (
+        <div>
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            Hosts {'>>'} {row.name}
+            {row.health_status === 'Healthy' ? (
+              <Tooltip title="Healthy">
+                <IconButton>
+                  <HealthAndSafetyIcon color="success" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Not Healthy">
+                <IconButton>
+                  <HealthAndSafetyIcon color="disabled" />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Typography>
+          <span style={{ marginLeft: '.5rem' }} />
 
-     
-    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-      <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-        <Typography>Basic Information</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-      <Paper>
-     
-    <Table >
-      <TableHead>
-        <TableRow>
-          <TableCell>OS</TableCell>
-          <TableCell align="right">{row.OS}</TableCell>
-          </TableRow>
-          <TableRow>
-          <TableCell>Processors</TableCell>
-          <TableCell align="right">{row.processor_type}</TableCell>
-          </TableRow>
-         
-          <TableRow>
-          <TableCell>Memory</TableCell>
-          <TableCell align="right">{row.memory}</TableCell>
-          </TableRow>
-          <TableRow>
-          <TableCell>Storage</TableCell>
-          <TableCell align="right">{row.total_storage}</TableCell>
-        
-        </TableRow>
-      </TableHead>
-     </Table>
-  </Paper>
+          <Accordion
+            expanded={expanded === 'panel1'}
+            onChange={handleChange('panel1')}
+          >
+            <AccordionSummary
+              aria-controls="panel1d-content"
+              id="panel1d-header"
+            >
+              <Typography>Basic Information</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Paper>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>OS</TableCell>
+                      <TableCell align="right">{row.OS}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Processors</TableCell>
+                      <TableCell align="right">{row.processor_type}</TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                      <TableCell>Memory</TableCell>
+                      <TableCell align="right">{row.memory}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Storage</TableCell>
+                      <TableCell align="right">{row.total_storage}</TableCell>
+                    </TableRow>
+                  </TableHead>
+                </Table>
+              </Paper>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion
+            expanded={expanded === 'panel2'}
+            onChange={handleChange('panel2')}
+          >
+            <AccordionSummary
+              aria-controls="panel2d-content"
+              id="panel2d-header"
+            >
+              <Typography>Services</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Paper>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Services assigned</TableCell>
+                      <TableCell align="right">
+                        # of instances running
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {row.services.map((row) => (
+                      <TableRow key={row.Name}>
+                        <TableCell component="th" scope="row">
+                          {row.Name}
+                        </TableCell>
+                        <TableCell align="right">{row.Instances}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Paper>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion
+            expanded={expanded === 'panel3'}
+            onChange={handleChange('panel3')}
+          >
+            <AccordionSummary
+              aria-controls="panel3d-content"
+              id="panel3d-header"
+            >
+              <Typography>Labels</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {/* {row.labels} */}
+                {row.labels.map((row) => (
+                  <TableRow key={row}>
+                    <TableCell component="th" scope="row">
+                      {row}
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+                {/* Expanding this table will show the server health dashboard for the host. */}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
        
-      </AccordionDetails>
-    </Accordion>
-    <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-      <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-        <Typography>Services</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Paper>
-      <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Services assigned</TableCell>
-          <TableCell align="right"># of instances running</TableCell>
-          
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {row.services.map(row => (
-          <TableRow key={row.Name}>
-            <TableCell component="th" scope="row">
-              {row.Name}
-            </TableCell>
-            <TableCell align="right">{row.Instances}</TableCell>
-            
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-    </Paper>
-        
-      </AccordionDetails>
-    </Accordion>
 
-    <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-      <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
-        <Typography>Labels</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-      <Typography >
-        {/* {row.labels} */}
-        {row.labels.map(row => (
-          <TableRow key={row}>
-            <TableCell component="th" scope="row">
-              {row}
-            </TableCell>
-            </TableRow>
-        ))} 
-       
-        {/* Expanding this table will show the server health dashboard for the host. */}
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
-    
-    <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
-      <AccordionSummary aria-controls="panel4d-content" id="panel4d-header">
-        <Typography>Health</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography >
-        {row.health_status}
-        {/* Expanding this table will show the server health dashboard for the host. */}
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
-   
-    <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
-      <AccordionSummary aria-controls="panel5d-content" id="panel5d-header">
-        <Typography>Connect</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>
-         Expanding this provides a button to initiate SSH Connection to the host through the browser
-        </Typography>
-        <Button variant="contained" onClick={handleHostConnect}>Connect to Host</Button>
-      </AccordionDetails>
-    </Accordion>
-  
-
-  </div>
-  
-  )
-    
-        }</>
-}
+          <Accordion
+            expanded={expanded === 'panel4'}
+            onChange={handleChange('panel4')}
+          >
+            <AccordionSummary
+              aria-controls="panel4d-content"
+              id="panel4d-header"
+            >
+              <Typography>Connect</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Expanding this provides a button to initiate SSH Connection to
+                the host through the browser
+              </Typography>
+              <Button variant="contained" onClick={handleHostConnect}>
+                Connect to Host
+              </Button>
+            </AccordionDetails>
+          </Accordion>
+        </div>
+      ))}
+    </>
+  );
+};

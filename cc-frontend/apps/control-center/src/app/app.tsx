@@ -16,25 +16,26 @@ import { AddHosts } from '../pages /AddHosts';
 import { HostsEditLanding } from '../pages /HostsEditLanding';
 import { ServicesEditLanding } from '../pages /ServicesEditLanding';
 import { ContainersInfoLanding } from '../pages /ContainersViewLanding';
-
+import { Main } from '../layout/MiniDrawer';
 
 const StyledApp = styled.div`
   // Your style here
 `;
 
 export function App() {
+  const [open, setOpen] = React.useState(false);
     return (
     
     <StyledApp>
     
       <Router>
 
-         <MiniDrawer/>
+      <MiniDrawer open={open} setOpen={setOpen} />
          
          
         <Routes>
 
-          <Route path='/app/controlcenter' element={<Home/>} />
+          {/* <Route path='/app/controlcenter' element={<Home/>} />
           <Route path='/app/controlcenter/Hosts' element={<Hosts/>} />
           <Route path='/app/controlcenter/Backup' element={<BackUp/>} />
           <Route path='/app/controlcenter/Monitor' element={<Monitor/>} />
@@ -48,7 +49,119 @@ export function App() {
           <Route path='/app/controlcenter/EditHosts' element={<HostsEditLanding/>}/>
           <Route path='/app/controlcenter/EditServices' element={<ServicesEditLanding/>}/>
           <Route path='/app/controlcenter/ContainersInfo' element={<ContainersInfoLanding/>}/>
-          
+           */}
+             <Route
+            path="/app/controlcenter"
+            element={
+              <Main open={open}>
+                <Home />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Hosts"
+            element={
+              <Main open={open}>
+                <Hosts />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Backup"
+            element={
+              <Main open={open}>
+                <BackUp />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Monitor"
+            element={
+              <Main open={open}>
+                <Monitor />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Services"
+            element={
+              <Main open={open}>
+                <Services />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Setupwizard"
+            element={
+              <Main open={open}>
+                <SetupWizard />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Upgradewizard"
+            element={
+              <Main open={open}>
+                <UpgradeWizard />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/Containers"
+            element={
+              <Main open={open}>
+                <ContainersInstances />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/HostsInfo"
+            element={
+              <Main open={open}>
+                <HostsInfoLanding />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/ServicesInfo"
+            element={
+              <Main open={open}>
+                <ServicesInfoLanding />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/AddHosts"
+            element={
+              <Main open={open}>
+                <AddHosts />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/EditHosts"
+            element={
+              <Main open={open}>
+                <HostsEditLanding />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/EditServices"
+            element={
+              <Main open={open}>
+                <ServicesEditLanding />
+              </Main>
+            }
+          />
+          <Route
+            path="/app/controlcenter/ContainersInfo"
+            element={
+              <Main open={open}>
+                <ContainersInfoLanding />
+              </Main>
+            }
+          />
         </Routes>
       </Router>
      

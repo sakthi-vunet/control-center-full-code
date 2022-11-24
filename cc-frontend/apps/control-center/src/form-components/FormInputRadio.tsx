@@ -5,34 +5,10 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
-} from "@material-ui/core";
+} from '@mui/material';
 import { Controller } from "react-hook-form";
 import { FormInputProps } from "./FormInputProps";
 import { options } from "./FormInputProps";
-
-// const options = [
-//   {
-//     label: "Web",
-//     value: "Web",
-//   },
-//   {
-//     label: "App",
-//     value: "App",
-
-//   },
-//   {
-//     label: "DB",
-//     value: "DB",
-
-//   },
-//   {
-//     label: "Common",
-//     value: "Common",
-
-//   },
-  
-// ];
-
 
 
 export const FormInputRadio: React.FC<FormInputProps> = ({
@@ -42,18 +18,7 @@ export const FormInputRadio: React.FC<FormInputProps> = ({
   options,
 
 }) => {
-  // export const generateRadioOptions = () => {
-  //   const [optionData,setOptionData]=React.useState<options[]>([]);
-
-    
-  //   return options.map((singleOption) => (
-  //     <FormControlLabel
-  //       value={singleOption.value}
-  //       label={singleOption.label}
-  //       control={<Radio />}
-  //     />
-  //   ));
-  // };
+ 
   const [optionData,setOptionData]=React.useState<any>([]);
 
   React.useEffect(() => {

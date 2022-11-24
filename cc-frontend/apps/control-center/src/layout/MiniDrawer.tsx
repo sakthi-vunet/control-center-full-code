@@ -80,40 +80,71 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+//   ({ theme, open }) => ({
+//     width: drawerWidth,
+//     flexShrink: 0,
+//     whiteSpace: 'nowrap',
+//     boxSizing: 'border-box',
+//     ...(open && {
+//       ...openedMixin(theme),
+//       '& .MuiDrawer-paper': openedMixin(theme),
+//     }),
+//     ...(!open && {
+//       ...closedMixin(theme),
+//       '& .MuiDrawer-paper': closedMixin(theme),
+//     }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+// );
+}));
 
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    width: 170,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-    placement: 'right'    
-  },
+interface miniDrawerProps {
+  open: boolean;
+  setOpen: (state: boolean) => void;
+}
+
+
+export const Main = styled('main', {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<{
+  open?: boolean;
+}>(({ theme, open }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(3),
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: 5,
+  ...(open && {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: `${drawerWidth - 60}px`,
+  }),
 }));
 
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props: miniDrawerProps) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
+  const open = props.open;
+  const setOpen = props.setOpen;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -126,7 +157,8 @@ export default function MiniDrawer() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      {/* <AppBar position="fixed" open={open}> */}
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -140,22 +172,39 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerClose}
+            edge="start"
+            sx={{
+              marginRight: 5,
+              ...(!open && { display: 'none' }),
+            }}
+          >
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
           <Typography variant="h6" noWrap component="div">
            Control Center
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
+        {/* <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
-        </DrawerHeader>
+        </DrawerHeader> */}
+        <DrawerHeader></DrawerHeader>
         <Divider />
         <List>
         <Link to="/app/controlcenter"  style={{ textDecoration: 'none',color:'black' }}>
       
-      <Tooltip title="Home" placement='right-start' sx={{minHeight:10}}>
+     
             <ListItem disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -176,8 +225,7 @@ export default function MiniDrawer() {
                 <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            {/* </HtmlTooltip> */}
-            </Tooltip>
+            
           </Link>
    
           <Link to="/app/controlcenter/Hosts"  style={{ textDecoration: 'none',color:'black'}}>

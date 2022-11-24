@@ -5,6 +5,40 @@ import { ContainerTable } from "./ContainerInstancesNew";
 import axios from 'axios';
 import * as React from 'react';
 import url_backend from "../configs/url";
+import { usePromiseTracker } from "react-promise-tracker";
+import { trackPromise } from 'react-promise-tracker';
+import {ThreeDots} from 'react-loader-spinner';
+
+
+export const LoadingIndicator = () => {
+
+  const { promiseInProgress } = usePromiseTracker();
+  
+ return (
+  
+  promiseInProgress ? (
+  // <h1>Hey some async call in progress ! </h1>
+  <div
+     style={{
+        width: "100%",
+        height: "100",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+     <ThreeDots 
+	// color={'#2196f3'} 
+  color='purple'
+	height={150} 
+	width={150} 
+	/>
+    </div>
+  ):(<></>)
+  
+  );  
+}
+
 
 export const ContainersInstances=()=>{
 
@@ -19,24 +53,28 @@ export const ContainersInstances=()=>{
         
         setData(data.data);
         console.log(data);
+        console.log('container fetch');
       } catch (e) {
         console.log(e);
       }
     };
   React.useEffect(() => {
-      getProductData();
-  }, []);
+      trackPromise(getProductData());
+  },[]);
 
   return (
-
+<>
     <Box
     component="main"
-    sx={{ flexGrow: 1, p: 3,display:'flex'}}>
+    sx={{ flexGrow: 1, p: 0.05,display:'flex'}}>
      {/* marginLeft: {  sm: `200px`, md: `200px`}}}> */}
     <Toolbar />
+    
     <ContainerTable data={data}/>
 
     </Box>
+    <LoadingIndicator/>
+    </>
     
   );
   }

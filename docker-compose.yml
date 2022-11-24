@@ -1,57 +1,74 @@
 version: "3.9"
-   
+
 services:
   db:
     volumes:
-      # - /home/vunet:/var/lib/mysql
-      - /home/sakthi/testappsql:/docker-entrypoint-initdb.d
+      - ./db_dump:/docker-entrypoint-initdb.d
     container_name: mysql_container_cc
-    # command:  --init-file /docker-entrypoint-initdb.d/backup.sql  #attention here
-    # command: --default-authentication-plugin=mysql_native_password
-    # command: mysqld --user=root
+
     image: mysql:8.0.17
     environment:
       MYSQL_ROOT_PASSWORD: helloworld
       MYSQL_DATABASE: testapp
-      # MYSQL_HOST_AUTH_METHOD: trust
-      # MYSQL_USER: root
+
     ports:
       - "3307:3306"
-    
+
     networks:
       - cc-backend-app
-    
+
   web:
-    
     build:
-        context: .
-        
-        dockerfile: Dockerfile_backend
-    # command: python manage.py runserver 0.0.0.0:8000
+      context: .
+
+      dockerfile: Dockerfile_backend
+
     volumes:
       - ./cc-backend:/code
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/ping:/usr/bin/ping
       - /usr/bin/telnet:/usr/bin/telnet
       - /usr/bin/ssh-keygen:/usr/bin/ssh-keygen
+      - /usr/bin/ssh:/usr/bin/ssh
     ports:
       - "8000:8000"
     environment:
       MYSQL_ROOT_PASSWORD: helloworld
       MYSQL_DATABASE: testapp
-    
+
     container_name: cc-django
     hostname: www.controlcenter.com
     networks:
       - cc-backend-app
     depends_on:
       - db
+  
+  web-tty:
+    image: wrfly/container-web-tty:latest
+    ports:
+      - 8080:8080
+    environment:
+      - WEB_TTY_DEBUG=false
+      - DOCKER_HOST=/var/run/docker.sock
+      # - WEB_TTY_DOCKER_HOST=/var/run/docker.sock
+      # both the env key is OK, first is WEB_TTY_DOCKER_HOST
+      # if WEB_TTY_DOCKER_HOST not found, then try to use DOCKER_HOST
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/ssh:/bin/ssh
+      - /usr/bin/ping:/usr/bin/ping
+      - /usr/bin/telnet:/usr/bin/telnet
+    depends_on:
+      - web
+      - db
+    networks:
+      - cc-backend-app
 
   front-end:
     build:
-        context: .
-        
-        dockerfile: Dockerfile_frontend
+      context: .
+
+      dockerfile: Dockerfile_frontend
     volumes:
       - ./cc-frontend:/react-ui
     ports:
@@ -61,6 +78,7 @@ services:
     depends_on:
       - db
       - web
+    
 networks:
   cc-backend-app:
     driver: bridge

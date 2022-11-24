@@ -7,6 +7,9 @@ from hostsdb import *
 import re
 from . import servicesdb
 
+
+
+
 client = docker.from_env()
 
 def get_services_list(nodeid):
@@ -106,8 +109,7 @@ def get_hosts():
         result.append(hosts_item)
     
     final=json.dumps(result,indent=2)
-    print(final)
+    # print(final)
+    
     
     return final
-
-get_hosts()

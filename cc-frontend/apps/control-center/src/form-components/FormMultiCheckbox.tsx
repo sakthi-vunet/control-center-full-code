@@ -4,7 +4,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-} from "@material-ui/core";
+} from "@mui/material";
 import { Controller } from "react-hook-form";
 import { FormInputProps } from "./FormInputProps";
 import axios from "axios";

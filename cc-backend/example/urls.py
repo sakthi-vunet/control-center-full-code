@@ -1,6 +1,6 @@
 from django.urls import path
-
 from . import views
+
 
 urlpatterns = [
 	path('api/containers/', views.index_containers),
@@ -13,5 +13,8 @@ urlpatterns = [
 	path('api/logs/',views.index_logs_containers),
 	path('api/servicetypes/',views.index_service_types),
 	path('api/migrateservices/',views.index_migrate_services),
+	path('api/auditlogs/',views.index_audit_logs),
+	path('api/notifications/',views.index_notifications),
+	path('api/login/',views.index_container_login),
 
 ]

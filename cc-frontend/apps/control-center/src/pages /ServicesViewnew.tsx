@@ -7,16 +7,20 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { ServiceData } from './ServicesTable';
 import { HostsData } from './HostsTable';
 import axios from 'axios';
 import url_backend from '../configs/url';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -53,8 +57,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
-
-export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
+export const ServicesView: React.FC<{ data: ServiceData[] }> = ({
   data,
 }) => {
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
@@ -64,32 +67,32 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
       setExpanded(newExpanded ? panel : false);
     };
 
-    const [hostsdata, sethostsData] = React.useState<HostsData[]>([]);
-    const request_url=url_backend+'/api/hosts/';
-    const getHostsData = async () => {
-        try {
-          const data = await axios.get<HostsData[]>(
-            request_url
-          );
-    
-          sethostsData(data.data);
-        } catch (e) {
-          console.log(e);
-        }
-      };
-      React.useEffect(() => {
-        getHostsData();
-      }, []);
-      const returnInstance = (temp: HostsData, serviceName: string) => {
-        let currentInstance = 0;
-        temp.services.forEach(({ Name, Instances }) => {
-          if (Name === serviceName) {
-            console.log(Name, Instances);
-            currentInstance = Instances;
-          }
-        });
-        return currentInstance;
-      };
+  const [hostsdata, sethostsData] = React.useState<HostsData[]>([]);
+  const request_url = url_backend + '/api/hosts/';
+  const getHostsData = async () => {
+    try {
+      const data = await axios.get<HostsData[]>(request_url);
+
+      sethostsData(data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  React.useEffect(() => {
+    getHostsData();
+  }, []);
+
+  const returnInstance = (temp: HostsData, serviceName: string) => {
+    let currentInstance = 0;
+    temp.services.forEach(({ Name, Instances }) => {
+      if (Name === serviceName) {
+        console.log(Name, Instances);
+        currentInstance = Instances;
+      }
+    });
+    return currentInstance;
+  };
 
   return (
     <>
@@ -102,11 +105,23 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
             component="div"
           >
             Service {'>>'} {row.name}
+            {row.state === 'enabled' ? (
+              <Tooltip title="enabled">
+                <IconButton>
+                  <HealthAndSafetyIcon color="success" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="disabled">
+                <IconButton>
+                  <HealthAndSafetyIcon color="disabled" />
+                </IconButton>
+              </Tooltip>
+            )}
           </Typography>
-
           <span style={{ marginLeft: '.5rem' }} />
-          <div
-            style={{
+          <Box
+            sx={{
               display: 'flex',
               alignItems: 'center',
             }}
@@ -114,11 +129,19 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
             <Typography>Service Type</Typography>
             <span style={{ marginLeft: '.5rem' }} />
             <Paper variant="outlined" elevation={8}>
-              <Typography variant="subtitle1" sx={{ paddingTop: '.3rem',paddingBottom:'.3rem',paddingRight:'0.8rem',paddingLeft:'.8rem' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  paddingTop: '.3rem',
+                  paddingBottom: '.3rem',
+                  paddingRight: '0.8rem',
+                  paddingLeft: '.8rem',
+                }}
+              >
                 {row.type}
               </Typography>
             </Paper>
-          </div>
+          </Box>
           <span style={{ marginLeft: '.5rem' }} />
           <Accordion
             expanded={expanded === 'panel1'}
@@ -145,9 +168,9 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
               <Typography>Instances and Host Mapping</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <div style={{ display: 'flex' }}>
-                <div style={{ display: 'inline-block', float: 'left' }}>
-                  <Table style={{ width: '200px', border: 1 }}>
+              <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'inline-block', float: 'left',width:'100px'}}>
+                  <Table >
                     <TableHead>
                       <TableRow>
                         <TableCell>Instances</TableCell>
@@ -157,43 +180,37 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
                       </TableRow>
                     </TableHead>
                   </Table>
-                  <span style={{ marginLeft: '.5rem' }} />
-                  <Typography>Hosts</Typography>
-                  <Table style={{ width: '200px' }}>
-                    <TableBody>
-                      {row.hosts.map((row) => (
-                        <TableRow key={row}>
-                          <TableCell component="th" scope="row">
-                            {row}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-                <div style={{ display: 'inline-block', marginInline: '250px' }}>
+                </Box>
+                <Box sx={{ display: 'inline-block', marginInline: '250px' }}>
                   <Typography>Current Allocation</Typography>
                   {
-                    <Table style={{ width: '300px' }}>
+                    <Box  sx={{ width: '300px' }}>
+                    <Table>
                       <TableBody>
-                        {hostsdata.map((tuple, index) => (
-                          <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {tuple.name}
-                            </TableCell>
-                            <TableCell>
-                              {returnInstance(tuple, row.name)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {hostsdata.map((tuple, index) =>
+                          returnInstance(tuple, row.name) > 0 ? (
+                            <TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                {tuple.name}
+                              </TableCell>
+                              <TableCell>
+                                {returnInstance(tuple, row.name)}
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            <></>
+                          )
+                        )}
                       </TableBody>
                     </Table>
+                    </Box>
+
+
                   }
-                </div>
-              </div>
+                </Box>
+              </Box>
             </AccordionDetails>
           </Accordion>
-
           <Accordion
             expanded={expanded === 'panel3'}
             onChange={handleChange('panel3')}
@@ -202,12 +219,26 @@ export const ControlledAccordions: React.FC<{ data: ServiceData[] }> = ({
               aria-controls="panel3d-content"
               id="panel3d-header"
             >
-              <Typography>Health</Typography>
+              <Typography>Labels</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>{row.state}</Typography>
+              <Box sx={{ width: '300px' }}>
+              <Table >
+                <TableBody>
+                  {row.labels.map((row) => (
+                    <TableRow key={row}>
+                      <TableCell component="th" scope="row">
+                        {row}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              </Box>
             </AccordionDetails>
           </Accordion>
+
+        
         </div>
       ))}
     </>

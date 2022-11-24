@@ -2,11 +2,43 @@ import { Box } from '@mui/system';
 import { Toolbar } from '@mui/material';
 import axios from 'axios';
 import * as React from 'react';
-import { ControlledAccordions } from './ServicesView';
+// import { ControlledAccordions } from './ServicesView';
 import { useLocation } from 'react-router-dom';
 import { ServiceData } from './ServicesTable';
 import {ServicesEdit }from './ServicesEditnew';
 import url_backend from '../configs/url';
+import { usePromiseTracker } from "react-promise-tracker";
+import { trackPromise } from 'react-promise-tracker';
+import {ThreeDots} from 'react-loader-spinner';
+
+
+export const LoadingIndicator = () => {
+
+  const { promiseInProgress } = usePromiseTracker();
+  
+ return (
+  
+  promiseInProgress ? (
+  // <h1>Hey some async call in progress ! </h1>
+  <div
+     style={{
+        width: "100%",
+        height: "100",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+     <ThreeDots 
+	color={'blue'} 
+	height={150} 
+	width={150} 
+	/>
+    </div>
+  ):(<></>)
+  
+  );  
+}
 
 
 type ServicesInfoprops = {
@@ -33,18 +65,21 @@ export const ServicesEditLanding = (props: ServicesInfoprops) => {
   };
 
   React.useEffect(() => {
-    getProductData();
+  trackPromise(getProductData());
   }, []);
 
   
   return (
+    <>
     <Box
       component="main"
-      sx={{ flexGrow: 1, p: 3,display:'flex'}}>
+      sx={{ flexGrow: 1, p: 0.05,display:'flex'}}>
          {/* marginLeft: { sm: `200px`, md: `200px` } }}> */}
       <Toolbar />
 
       <ServicesEdit data={data} />
     </Box>
+    <LoadingIndicator/>
+    </>
   );
 };

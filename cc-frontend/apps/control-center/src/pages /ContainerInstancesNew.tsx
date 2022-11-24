@@ -20,7 +20,7 @@ import { visuallyHidden } from '@mui/utils';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
 import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from "material-ui-search-bar";
+import SearchBar from '@mkyy/mui-search-bar';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import LoginSharpIcon from '@mui/icons-material/LoginSharp';
@@ -40,6 +40,9 @@ import { ThemeProvider } from '@material-ui/core'
 import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from "@material-ui/core/styles";
 import url_backend from '../configs/url';
+import { usePromiseTracker } from "react-promise-tracker";
+import { trackPromise } from 'react-promise-tracker';
+import {ThreeDots} from 'react-loader-spinner';
 
 export interface ContainerData{
   _id:        string;
@@ -330,6 +333,7 @@ export const ContainerTable : React.FC<{data: ContainerData[]}> = ({ data }) => 
 
   const handleClose = () => {
     setOpen(false);
+    setLogdata('');
   };
   
   const [orderBy, setOrderBy] = React.useState<keyof ContainerData>('name');
@@ -349,6 +353,7 @@ export const ContainerTable : React.FC<{data: ContainerData[]}> = ({ data }) => 
   const [success, setSuccess] = React.useState(false);
   const timer = React.useRef<number>();
 
+  
   const buttonSx = {
     ...(success && {
       bgcolor: green[500],
@@ -364,15 +369,8 @@ export const ContainerTable : React.FC<{data: ContainerData[]}> = ({ data }) => 
     };
   }, []);
 
-  const handleButtonClick = () => {
-    if (!loading) {
-      setSuccess(false);
-      setLoading(true);
-      timer.current = window.setTimeout(() => {
-        setSuccess(true);
-        setLoading(false);
-      }, 2000);
-    }
+  const handleRefresh = () => {
+    setLogdata('');
     getLogs(currLogs).then(res => {
       setLogdata(res);
     })
@@ -404,6 +402,33 @@ const getLogs=async(id)=>{
   } catch (e) {
   
     console.log(e);
+    return "cannot connect to container";
+  }
+}
+
+const getLogin=async(id)=>{
+
+  let url=url_backend+'/api/login/?name=';
+  url=url+id;
+  console.log(url);
+  try {
+    
+
+    const data = await axios.get<string>(
+      url
+    );
+    console.log("Login"+JSON.stringify(data.data));
+    if (data.data!=='')
+      window.open(data.data,'_blank')?.focus()
+    else
+      alert('Login to container not possible as container is not running');
+    // window.open('http://wwww.google.com','_blank')?.focus()
+    return JSON.parse(JSON.stringify(data.data));
+    
+  } catch (e) {
+  
+    console.log(e);
+    console.log("Login cannot connect to container");
     return "cannot connect to container";
   }
 }
@@ -480,15 +505,16 @@ const getLogs=async(id)=>{
     routeChangeView(name);
   };
 
-  const handleRefresh=()=>{
-    // window. location. reload();
-    getLogs(currLogs).then(res => {
-      setLogdata(res);
-    })
+  const checkRunning=(node:string)=>{
+    if(node==='')
+      return false
+    else
+      return true
   }
 
   const handleContainerLogin=(event:React.MouseEvent<unknown>,name:string)=>{
-    console.log(name);
+    // console.log(name);
+    getLogin(name);
     event.preventDefault();
     event.stopPropagation();
   }
@@ -501,7 +527,7 @@ const getLogs=async(id)=>{
     handleClickOpen();
     getLogs(name).then(res => {
         setLogdata(res);
-      })
+      });
     
   }
 
@@ -544,11 +570,64 @@ const getLogs=async(id)=>{
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
+  const LogsDialog=()=>{
+    return( <div>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Container Log</DialogTitle>
+        <DialogContent>
+         
+          
+        
+          <Box bgcolor={"#eeeeee"} sx={{p:2}} >
+          <DialogContentText>
+            {/* <LoadingIndicatorLogs/> */}
+          <Typography 
+          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
+          color="red" >
+           {logdata?logdata:<ThreeDots 
+	color={'red'} 
+	height={80} 
+	width={80} 
+	/>}
+          </Typography>
+          </DialogContentText>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          <Box>
+          <Button onClick={handleRefresh}>Refresh</Button>
+          {loading && (
+          <CircularProgress
+            size={24}
+            sx={{
+              color: green[500],
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginTop: '-12px',
+              marginLeft: '-12px',
+            }}
+          />
+        )}
+          </Box>
+        </DialogActions>
+      </Dialog>
+    </div>
+     )
+  }
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
     const classes = useStyles();
 
+    const commonStyles = {
+      bgcolor: 'background.paper',
+      m: 1,
+      borderColor: 'text.primary',
+      
+    };
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -606,12 +685,13 @@ const getLogs=async(id)=>{
         </>
       ) : (
         <>
-        {/* <SearchBar
+      
+        <SearchBar
         value={searched}
         onChange={(searchVal) => requestSearch(searchVal)}
-        onCancelSearch={() => cancelSearch()}
-        
-        /> */}
+              
+        />
+   
         <Tooltip title="Expanded view">
           <IconButton 
           onClick={routeChange}
@@ -622,6 +702,7 @@ const getLogs=async(id)=>{
         </>
       )}
     </Toolbar>
+    <LogsDialog/>
         
     {/* <ThemeProvider theme={theme}> */}
         <TableContainer>
@@ -646,6 +727,8 @@ const getLogs=async(id)=>{
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const colorRunning=checkRunning(row.host);
+
 
                   return (
                     <TableRow
@@ -656,7 +739,8 @@ const getLogs=async(id)=>{
                       tabIndex={-1}
                       key={row.name}
                       selected={isItemSelected}
-                      sx={{padding:"checkbox"}}
+                      sx={{padding:"checkbox",
+                      backgroundColor: (colorRunning?'#6fbf73':'#f6685e')}}
                       className={classes.tableRow}
                       
                     >
@@ -693,7 +777,7 @@ const getLogs=async(id)=>{
                         </Tooltip>
                         <Tooltip title="Login">
                           <IconButton 
-                          onClick={(event) => handleContainerLogin(event, row._id)}
+                          onClick={(event) => handleContainerLogin(event, row.name)}
                           >
                             <LoginSharpIcon sx={{ fontSize: 20 }}/>
                           </IconButton>
@@ -732,42 +816,8 @@ const getLogs=async(id)=>{
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Container Log</DialogTitle>
-        <DialogContent>
-         
-          
-        
-          <Box bgcolor={"#eeeeee"} sx={{p:2}} >
-          <DialogContentText>
-          <Typography sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap'}} color="red" >
-            {logdata}
-          </Typography>
-          </DialogContentText>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Box>
-          <Button onClick={handleButtonClick}>Refresh</Button>
-          {loading && (
-          <CircularProgress
-            size={24}
-            sx={{
-              color: green[500],
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              marginTop: '-12px',
-              marginLeft: '-12px',
-            }}
-          />
-        )}
-          </Box>
-        </DialogActions>
-      </Dialog>
-    </div>
+    
+     
      
     </Box>
    

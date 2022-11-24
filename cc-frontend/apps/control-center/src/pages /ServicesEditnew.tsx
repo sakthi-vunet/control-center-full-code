@@ -7,15 +7,14 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import Stack from '@mui/material/Stack';
@@ -24,6 +23,8 @@ import { ServiceData } from './ServicesTable';
 import { HostsData } from './HostsTable';
 import axios from 'axios';
 import url_backend from '../configs/url';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+
 
 
 const Accordion = styled((props: AccordionProps) => (
@@ -251,6 +252,20 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
             component="div"
           >
             Service {'>>'} {row.name}
+            
+            {row.state === 'enabled' ? (
+              <Tooltip title="enabled">
+                <IconButton>
+                  <HealthAndSafetyIcon color="success" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="disabled">
+                <IconButton>
+                  <HealthAndSafetyIcon color="disabled" />
+                </IconButton>
+              </Tooltip>
+            )}
           </Typography>
 
           <span style={{ marginLeft: '.5rem' }} />
@@ -334,7 +349,7 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                       </TableRow>
                     </TableHead>
                   </Table>
-                  <span style={{ marginLeft: '.5rem' }} />
+                  {/* <span style={{ marginLeft: '.5rem' }} />
                   <Typography>Hosts</Typography>
                   <Table style={{ width: '200px' }}>
                     <TableBody>
@@ -362,28 +377,8 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                     <IconButton onClick={handleHostAdd}>
                       <AddCircleOutlineRoundedIcon />
                     </IconButton>
-                  </Tooltip>
-                </div>
-                <div style={{ display: 'inline-block', marginInline: '250px' }}>
-                  <Typography>Current Allocation</Typography>
-                  {
-                    <Table style={{ width: '300px' }}>
-                      <TableBody>
-                        {hostsdata.map((tuple, index) => (
-                          <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {tuple.name}
-                            </TableCell>
-                            <TableCell>
-                              {returnInstance(tuple, row.name)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  }
-
-                  <Stack spacing={2} direction="row" margin="75px">
+                  </Tooltip> */}
+                   <Stack spacing={2} direction="row" margin="75px">
                     <Button
                       variant="contained"
                       onClick={(event) => handleSave(event, row.type, row.name)}
@@ -394,11 +389,34 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                     onClick={(event) => handleDiscard(event)}>Discard</Button>
                   </Stack>
                 </div>
+                <div style={{ display: 'inline-block', marginInline: '250px' }}>
+                  <Typography>Current Allocation</Typography>
+                  {
+                    <Table style={{ width: '300px' }}>
+                      <TableBody>
+                      {hostsdata.map((tuple, index) => (
+                          (returnInstance(tuple, row.name)>0?
+                          <TableRow key={index}>
+                            <TableCell component="th" scope="row">
+                              {tuple.name}
+                            </TableCell>
+                            <TableCell>
+                              {returnInstance(tuple, row.name)}
+                            </TableCell>
+                          </TableRow>:<></>)
+                        ))}
+                      </TableBody>
+                    </Table>
+                  }
+              
+             
+                 
+                  </div>
               </div>
             </AccordionDetails>
           </Accordion>
 
-          <Accordion
+          {/* <Accordion
             expanded={expanded === 'panel3'}
             onChange={handleChange('panel3')}
           >
@@ -411,15 +429,15 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
             <AccordionDetails>
               <Typography>{row.state}</Typography>
             </AccordionDetails>
-          </Accordion>
+          </Accordion> */}
 
           <Accordion
-            expanded={expanded === 'panel4'}
-            onChange={handleChange('panel4')}
+            expanded={expanded === 'panel3'}
+            onChange={handleChange('panel3')}
           >
             <AccordionSummary
-              aria-controls="panel4d-content"
-              id="panel4d-header"
+              aria-controls="panel3d-content"
+              id="panel3d-header"
             >
               <Typography>Labels</Typography>
             </AccordionSummary>

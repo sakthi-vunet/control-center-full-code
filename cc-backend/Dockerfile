@@ -24,6 +24,8 @@ RUN pip install django ptvsd
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN mkdir /code/
+RUN mkdir /var/log/cc-logs
+RUN chmod 777 /var/log/cc-logs
 
 WORKDIR /code/
 COPY requirements.txt /code

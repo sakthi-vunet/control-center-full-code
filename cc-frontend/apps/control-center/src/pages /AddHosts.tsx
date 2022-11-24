@@ -1,10 +1,11 @@
-import { Paper, Typography } from "@material-ui/core";
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInputText } from "../form-components/FormInputText";
 import { FormInputMultiCheckbox } from "../form-components/FormMultiCheckbox";
 import { FormInputRadio } from "../form-components/FormInputRadio";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Button } from '@mui/material';
 import Stack from "@mui/material/Stack";
 import axios from 'axios';
 import url_backend from "../configs/url";

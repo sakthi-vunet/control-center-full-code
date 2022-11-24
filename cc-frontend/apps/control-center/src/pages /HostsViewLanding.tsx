@@ -8,6 +8,37 @@ import { Typography } from "@material-ui/core";
 import {useLocation} from 'react-router-dom';
 import url_backend from "../configs/url";
 import { request } from "https";
+import { usePromiseTracker } from "react-promise-tracker";
+import { trackPromise } from 'react-promise-tracker';
+import {ThreeDots} from 'react-loader-spinner';
+
+
+export const LoadingIndicator = () => {
+
+  const { promiseInProgress } = usePromiseTracker();
+  
+ return (
+  
+  promiseInProgress ? (
+  <div
+     style={{
+        width: "100%",
+        height: "100",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+     <ThreeDots 
+	color={'blue'} 
+	height={150} 
+	width={150} 
+	/>
+    </div>
+  ):(<></>)
+  
+  );  
+}
 
 export interface HostsData{
   _id:               string;
@@ -50,43 +81,41 @@ export const HostsInfoLanding =(props:HostsInfoprops)=>{
   
   const getProductData = async () => {
      
-      let url=request_url;
-      url=url+idhere.id;
-      console.log(url);
-      try {
-        
-
-        const data = await axios.get<HostsData[]>(
-          url
-        );
-        
-        setData(data.data);
-        console.log("Data:"+{data});
-      } catch (e) {
+    let url=request_url;
+    url=url+idhere.id;
+    console.log(url);
+    try {
       
-        console.log(e);
-      }
-    };
+  
+      const data = await axios.get<HostsData[]>(
+        url
+      );
+      
+      setData(data.data);
+      console.log("Data:"+{data});
+    } catch (e) {
+    
+      console.log(e);
+    }
+  };
   
   React.useEffect(() => {
-      getProductData();
+      trackPromise(getProductData());
   },[] );
   
   console.log("After use effect"+data);
   return (
+    <>
     <Box
       component="main"
-      sx={{ flexGrow: 1, p: 3, display:'flex'}}>
-      {/* marginLeft: {  sm: `200px`, md: `200px`}}}> */}
+      sx={{ flexGrow: 1, p: 0.05, display:'flex'}}>
       <Toolbar />
-      {/* <Typography>
-        Hosts {'>>'} Hosts1
-      </Typography>
-      <span style={{marginLeft:'.5rem'}}/> */}
-
+      
     <ControlledAccordions data={data} />
     
 </Box>
+<LoadingIndicator/>
+</>
      
   );
 };
