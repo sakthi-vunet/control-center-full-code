@@ -16,5 +16,5 @@ urlpatterns = [
 	path('api/auditlogs/',views.index_audit_logs),
 	path('api/notifications/',views.index_notifications),
 	path('api/login/',views.index_container_login),
-
+	path('api/user',views.index_user),
 ]

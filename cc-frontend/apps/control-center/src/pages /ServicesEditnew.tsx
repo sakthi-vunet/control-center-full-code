@@ -24,7 +24,7 @@ import { HostsData } from './HostsTable';
 import axios from 'axios';
 import url_backend from '../configs/url';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-
+import { RotatingLines } from 'react-loader-spinner';
 
 
 const Accordion = styled((props: AccordionProps) => (
@@ -349,35 +349,6 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                       </TableRow>
                     </TableHead>
                   </Table>
-                  {/* <span style={{ marginLeft: '.5rem' }} />
-                  <Typography>Hosts</Typography>
-                  <Table style={{ width: '200px' }}>
-                    <TableBody>
-                      {row.hosts.map((row) => (
-                        <TableRow key={row}>
-                          <TableCell component="th" scope="row">
-                            {row}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <Tooltip title="Delete">
-                              <IconButton
-                                onClick={(event) =>
-                                  handleHostDelete(event, row)
-                                }
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                  <Tooltip title="Add Host">
-                    <IconButton onClick={handleHostAdd}>
-                      <AddCircleOutlineRoundedIcon />
-                    </IconButton>
-                  </Tooltip> */}
                    <Stack spacing={2} direction="row" margin="75px">
                     <Button
                       variant="contained"
@@ -394,7 +365,7 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                   {
                     <Table style={{ width: '300px' }}>
                       <TableBody>
-                      {hostsdata.map((tuple, index) => (
+                      {hostsdata?hostsdata.map((tuple, index) => (
                           (returnInstance(tuple, row.name)>0?
                           <TableRow key={index}>
                             <TableCell component="th" scope="row">
@@ -404,7 +375,7 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
                               {returnInstance(tuple, row.name)}
                             </TableCell>
                           </TableRow>:<></>)
-                        ))}
+                        )):<RotatingLines strokeColor="blue"/>}
                       </TableBody>
                     </Table>
                   }
@@ -416,22 +387,7 @@ export const ServicesEdit: React.FC<{ data: ServiceData[] }> = ({ data }) => {
             </AccordionDetails>
           </Accordion>
 
-          {/* <Accordion
-            expanded={expanded === 'panel3'}
-            onChange={handleChange('panel3')}
-          >
-            <AccordionSummary
-              aria-controls="panel3d-content"
-              id="panel3d-header"
-            >
-              <Typography>Health</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{row.state}</Typography>
-            </AccordionDetails>
-          </Accordion> */}
-
-          <Accordion
+           <Accordion
             expanded={expanded === 'panel3'}
             onChange={handleChange('panel3')}
           >

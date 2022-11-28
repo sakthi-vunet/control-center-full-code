@@ -24,8 +24,8 @@ import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
 import BackupIcon from '@mui/icons-material/Backup';
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Grid } from '@mui/material';
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -80,20 +80,6 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-//   ({ theme, open }) => ({
-//     width: drawerWidth,
-//     flexShrink: 0,
-//     whiteSpace: 'nowrap',
-//     boxSizing: 'border-box',
-//     ...(open && {
-//       ...openedMixin(theme),
-//       '& .MuiDrawer-paper': openedMixin(theme),
-//     }),
-//     ...(!open && {
-//       ...closedMixin(theme),
-//       '& .MuiDrawer-paper': closedMixin(theme),
-//     }),
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -157,7 +143,6 @@ export default function MiniDrawer(props: miniDrawerProps) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      {/* <AppBar position="fixed" open={open}> */}
       <AppBar position="fixed">
         <Toolbar>
           <IconButton
@@ -188,17 +173,21 @@ export default function MiniDrawer(props: miniDrawerProps) {
               <ChevronLeftIcon />
             )}
           </IconButton>
+          <Grid>
           <Typography variant="h6" noWrap component="div">
            Control Center
           </Typography>
+          </Grid>
+          <Grid container justifyContent="flex-end">
+
+        <IconButton>
+          <AccountCircleIcon/>
+        </IconButton>
+        </Grid>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        {/* <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader> */}
+        
         <DrawerHeader></DrawerHeader>
         <Divider />
         <List>

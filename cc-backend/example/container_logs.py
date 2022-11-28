@@ -52,7 +52,7 @@ def get_logs(service_name):
                     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                     
                     # ssh.connect(hostname,  username='sakthi', password='Lucky@2002')
-                    ssh.connect('192.168.8.113',  username='sakthi', password='Lucky@2002')
+                    ssh.connect('192.168.8.155',  username='sakthi', password='Lucky@2002')
                     # Execute command on SSH terminal
                     # using exec_command
                     # get container id

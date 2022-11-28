@@ -149,11 +149,18 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
   },
   {
+    id:'host',
+    numeric:false,
+    disablePadding:false,
+    label:'Status',
+  },
+  {
     id: 'host',
     numeric: false,
     disablePadding: false,
     label: 'Node',
   }
+
   
 ];
 
@@ -513,7 +520,7 @@ const getLogin=async(id)=>{
   }
 
   const handleContainerLogin=(event:React.MouseEvent<unknown>,name:string)=>{
-    // console.log(name);
+
     getLogin(name);
     event.preventDefault();
     event.stopPropagation();
@@ -740,7 +747,8 @@ const getLogin=async(id)=>{
                       key={row.name}
                       selected={isItemSelected}
                       sx={{padding:"checkbox",
-                      backgroundColor: (colorRunning?'#6fbf73':'#f6685e')}}
+                      // backgroundColor: (colorRunning?'#6fbf73':'#f6685e')
+                    }}
                       className={classes.tableRow}
                       
                     >
@@ -763,6 +771,7 @@ const getLogin=async(id)=>{
                       >
                         {row.name}
                       </TableCell>
+                      <TableCell align='left' sx={{color: (colorRunning?'#6fbf73':'#f6685e')}}>{colorRunning?"Running":"Not Running"}</TableCell>
                       <TableCell align="left"
                       className={classes.tableCell}>{row.host}</TableCell>
                       <TableCell align="left"

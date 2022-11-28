@@ -21,6 +21,7 @@ import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import { RotatingLines } from 'react-loader-spinner';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -187,7 +188,7 @@ export const ServicesView: React.FC<{ data: ServiceData[] }> = ({
                     <Box  sx={{ width: '300px' }}>
                     <Table>
                       <TableBody>
-                        {hostsdata.map((tuple, index) =>
+                        {hostsdata?hostsdata.map((tuple, index) =>
                           returnInstance(tuple, row.name) > 0 ? (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
@@ -200,7 +201,7 @@ export const ServicesView: React.FC<{ data: ServiceData[] }> = ({
                           ) : (
                             <></>
                           )
-                        )}
+                        ):<RotatingLines strokeColor="blue"/>}
                       </TableBody>
                     </Table>
                     </Box>

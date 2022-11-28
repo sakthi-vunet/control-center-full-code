@@ -21,12 +21,22 @@ from . import get_status
 from . import notifications
 from . import container_login
 
+class MyFilter(object):
+    def __init__(self, level):
+        self.__level = level
+
+    def filter(self, logRecord):
+        return logRecord.levelno <= self.__level
+
 logging.basicConfig(
-     filename='/var/log/cc-logs/generator.log',
      level=logging.INFO, 
      format= '[%(asctime)s]%(levelname)s - %(message)s',
      datefmt='%Y-%m-%d %H:%M:%S'
  )
+
+handler = logging.FileHandler('/var/log/cc-logs/generator.log')
+handler.addFilter(MyFilter(logging.INFO))
+
 
 current_user='xxx'
 
@@ -49,6 +59,8 @@ def get_containers_id(id):
 def index_containers(request):
     logger = logging.getLogger('containers')
     logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+
     if request.method=="GET":
         if request.GET.get("_id") is None:
             return JsonResponse(get_containers(),safe=False)
@@ -68,6 +80,8 @@ def index_containers(request):
 def index_logs_containers(request):
     logger = logging.getLogger('container-logs')
     logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+
     if request.method=="GET":
         container_id=request.GET.get("_id")
         # logger.info('User '+current_user+' requested container logs of '+container_id)
@@ -94,6 +108,8 @@ def get_services_id(id):
 def index_services(request):
     logger = logging.getLogger('services')
     logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+
     if request.method=="GET":
         if request.GET.get("_id") is None:
             return JsonResponse(get_services(),safe=False)
@@ -140,6 +156,7 @@ def get_hosts_id(id):
 def index_hosts(request):
     logger = logging.getLogger('hosts')
     logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
     
 
     if request.method=="GET":
@@ -269,3 +286,8 @@ def index_notifications(request):
 def index_container_login(request):
     if request.method=="GET":
         return JsonResponse(container_login.get_login_details(request.GET.get("name")),safe=False)
+
+def index_user(request):
+    current_user=request.user.id
+    if request.method=="GET":
+        return JsonResponse(current_user,safe=False)

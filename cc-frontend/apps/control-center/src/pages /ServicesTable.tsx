@@ -26,6 +26,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import url_backend from '../configs/url';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 
 export interface ServiceData {
@@ -123,13 +125,13 @@ const headCells: readonly HeadCell[] = [
     label: 'Type',
   },
   {
-    id: 'actual_instances',
+    id: 'expected_instances',
     numeric: true,
     disablePadding: false,
     label: 'Instances',
   },
   {
-    id: 'expected_instances',
+    id: 'actual_instances',
     numeric: true,
     disablePadding: false,
     label: 'Nodes',
@@ -140,6 +142,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Node List',
   },
+  {
+    id:'actual_instances',
+    numeric:false,
+    disablePadding:false,
+    label:'Status'
+  }
 ];
 
 interface EnhancedTableProps {
@@ -489,7 +497,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                       key={row.name}
                       selected={isItemSelected}
                       sx={{ padding: 'checkbox',                      
-                            backgroundColor: (colorRunning?'#6fbf73':'#f6685e'),
+                            // backgroundColor: (colorRunning?'#6fbf73':'#f6685e'),
                             // "& th": {
                             //   color:  (colorRunning?'green':'red')
                             // }
@@ -522,6 +530,10 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                       <TableCell align="left"  component="th">{row.hosts.length}</TableCell>
                       <TableCell align="left"  component="th">
                         {JSON.stringify(row.hosts, null, 2)}
+                      </TableCell>
+                      <TableCell align="left" component='th'>
+                        {colorRunning?<IconButton sx={{color:'green'}}><CheckCircleIcon/></IconButton>:
+                        <IconButton sx={{color:'red'}}><CancelIcon/></IconButton>}
                       </TableCell>
                       <TableCell align="left"  component="th">
                         <Tooltip title="Services Detail">

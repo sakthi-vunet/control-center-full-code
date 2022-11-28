@@ -153,7 +153,7 @@ const headCells: readonly HeadCell[] = [
     id: 'Running_services',
     numeric: true,
     disablePadding: false,
-    label: '# of services,containers',
+    label: 'services/containers',
   },
   {
     id: 'services',
@@ -547,7 +547,7 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
         {/* <span style={{marginLeft:'.5rem'}}/> */}
         <TableContainer>
           <Table
-            sx={{ minWidth: 70}}
+            sx={{ minWidth: 70,overflowX: "hidden"         }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
@@ -611,7 +611,7 @@ const [migrateList,setMigrateList]=React.useState<MigrateServicesListData>();
                       </TableCell>
 
                       <TableCell align="left" >{JSON.stringify(row.Running_services)+'/'+JSON.stringify(row.Running_instances)}</TableCell>
-                      <TableCell align="left">{getServices(row.services)}</TableCell>
+                      <TableCell align="left" sx={{wordWrap: "break-word",overflowWrap:'break-word'}}>{getServices(row.services)}</TableCell>
                       <TableCell align="left" >{row.health_status}</TableCell>
                       
                       <TableCell align="left" >

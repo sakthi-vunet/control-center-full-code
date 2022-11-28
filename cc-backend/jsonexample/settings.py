@@ -139,6 +139,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
-LOGIN_REDIRECT_URL = 'http://control-center_front-end_1:4200/app/controlcenter/'
+LOGIN_REDIRECT_URL = 'http://localhost:4200/app/controlcenter/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
