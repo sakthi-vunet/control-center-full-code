@@ -18,7 +18,7 @@ def getfromdb_settings():
     
     # fetch data from control center attributes table
     
-    sql = db.text("select count(name) from hosts")
+    sql = db.text("select name from hosts")
  
     # Fetch all the records
 
@@ -28,18 +28,24 @@ def getfromdb_settings():
     # forming key value pairs
 
     settings={}
+    host_list=[]
     for i in result:
-        x=i._asdict()       
-        settings['hosts']=x['count(name)']
+        x=i._asdict()   
+        host_list.append(x['name'])
+    settings['hosts']= host_list
+       
     
-    sql = db.text("select count(name) from services where status='enabled'")
+    sql = db.text("select name from services where status='enabled'")
  
     # Fetch all the records
 
     result = engine.execute(sql).fetchall()   
+    service_enabled_list=[]
     for i in result:
-        x=i._asdict()       
-        settings['enabled_services']=x['count(name)']
+        x=i._asdict()  
+        service_enabled_list.append(x['name'])
+        
+    settings['enabled_services']=service_enabled_list
     
     sql = db.text("select sum(expected_instances) from services")
  
@@ -53,6 +59,7 @@ def getfromdb_settings():
 
 
     return [settings]
+
 
   
 # print(getfromdb_settings())

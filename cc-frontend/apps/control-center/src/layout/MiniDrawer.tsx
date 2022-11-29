@@ -26,6 +26,21 @@ import UpgradeIcon from '@mui/icons-material/Upgrade';
 import BackupIcon from '@mui/icons-material/Backup';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Grid } from '@mui/material';
+import url_backend from '../configs/url';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import {Button} from '@mui/material';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import PersonIcon from '@mui/icons-material/Person';
+import axios from 'axios';
+import { blue } from '@mui/material/colors';
+import Avatar from '@mui/material/Avatar';
+
+
+
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -126,8 +141,23 @@ export const Main = styled('main', {
 }));
 
 
+
 export default function MiniDrawer(props: miniDrawerProps) {
   const theme = useTheme();
+  const [data,setData]=React.useState('')
+  const getUserData = async () => {
+    const url = url_backend + '/api/user/';
+  
+    try {
+      const data = await axios.get<string>(url);
+  
+      setData(data.data);
+      console.log('Data:' + { data });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // const [open, setOpen] = React.useState(false);
   const open = props.open;
   const setOpen = props.setOpen;
@@ -140,7 +170,48 @@ export default function MiniDrawer(props: miniDrawerProps) {
     setOpen(false);
   };
 
+  const [userOpen,setUserOpen]=React.useState(false);
+  const handleLogout=()=>{
+    window.open(url_backend+'/accounts/logout/')
+  }
+
+  const handleUserClose=()=>{
+    setUserOpen(false)
+  }
+
+  const handleUserOpen=()=>{
+    setUserOpen(true)
+    getUserData()
+  }
+
+  const UserDialog=()=>{
+    return(<div>
+      <Dialog
+        open={userOpen}
+        onClose={handleUserClose}
+       
+      >
+        <DialogTitle> Current User</DialogTitle>
+        <List sx={{ pt: 0 }}>
+          <ListItem>
+          <ListItemAvatar>
+              <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                <PersonIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={data?data:"Admin"} />
+          </ListItem>
+        </List>
+        <DialogActions>
+          <Button onClick={handleUserClose}>Close</Button>
+          <Button onClick={handleLogout}>Logout</Button>
+        </DialogActions>
+      </Dialog>
+    </div>)
+  }
   return (
+    <>
+    <UserDialog/>
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed">
@@ -181,7 +252,7 @@ export default function MiniDrawer(props: miniDrawerProps) {
           <Grid container justifyContent="flex-end">
 
         <IconButton>
-          <AccountCircleIcon/>
+          <AccountCircleIcon onClick={(event) => handleUserOpen()}/>
         </IconButton>
         </Grid>
         </Toolbar>
@@ -360,5 +431,6 @@ export default function MiniDrawer(props: miniDrawerProps) {
         <DrawerHeader/>
       
     </Box>
+    </>
   );
 }

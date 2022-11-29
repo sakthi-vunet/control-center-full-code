@@ -60,9 +60,9 @@ export const LoadingIndicator = () => {
 };
 
 export interface Settings {
-  hosts: number;
+  hosts: string[];
   expected_instances: number;
-  enabled_services: number;
+  enabled_services: string[];
 }
 
 export interface Status {
@@ -95,6 +95,14 @@ export function SettingsCard() {
     }
   };
 
+  const [open,setOpen]=React.useState(false)
+
+  const handleClose=()=>{
+    setOpen(false)
+  }
+  const handleOpen=()=>{
+    setOpen(true)
+  }
   React.useEffect(() => {
     getProductData();
   }, []);
@@ -106,12 +114,12 @@ export function SettingsCard() {
           <CardContent>
             <Table>
               <TableRow>
-                <TableCell sx={{ fontSize: 40 }}>{row.hosts}</TableCell>
+                <TableCell sx={{ fontSize: 40 }}>{row.hosts.length}</TableCell>
                 <TableCell sx={{ fontSize: 40 }}>
                   {row.expected_instances}
                 </TableCell>
                 <TableCell sx={{ fontSize: 40 }}>
-                  {row.enabled_services}
+                  {row.enabled_services.length}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -122,10 +130,65 @@ export function SettingsCard() {
             </Table>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button size="small">View Details</Button>
+            <Button size="small" onClick={(event) => handleOpen()}>View Details</Button>
           </CardActions>
         </Card>
       ))}
+
+<div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          maxWidth="sm"
+        >
+          <DialogTitle> Hosts</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText
+                sx={{
+                  whiteSpace: 'pre-line',
+                  fontFamily: 'monospace',
+                  fontSize: '15px',
+                  flex: 1,
+                  flexWrap: 'wrap',
+                }}
+                color="black"
+              >
+                 <Typography 
+          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
+          color="red" >
+               {data.map((row) => (JSON.stringify(row.hosts)))}</Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogTitle> Services Enabled</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText
+                sx={{
+                  whiteSpace: 'pre-line',
+                  fontFamily: 'monospace',
+                  fontSize: '15px',
+                  flex: 1,
+                  flexWrap: 'wrap',
+                }}
+                color="black"
+              >
+              <Typography 
+          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
+          color="red" >
+               {data.map((row) => (JSON.stringify(row.enabled_services)))}
+               </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+           
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 }
@@ -273,6 +336,7 @@ export function VersionInfoCard() {
 }
 
 export function StatusCard() {
+
   const [data, setData] = React.useState<Status[]>([]);
 
   const getProductData = async () => {
@@ -291,6 +355,14 @@ export function StatusCard() {
   React.useEffect(() => {
     trackPromise(getProductData());
   }, []);
+  const [open,setOpen]=React.useState(false)
+
+  const handleClose=()=>{
+    setOpen(false)
+  }
+  const handleOpen=()=>{
+    setOpen(true)
+  }
 
   return (
     <>
@@ -325,10 +397,85 @@ export function StatusCard() {
             </Table>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button size="small">View Details</Button>
+            <Button size="small" onClick={handleOpen}>View Details</Button>
           </CardActions>
         </Card>
       ))}
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          maxWidth="sm"
+        >
+          <DialogTitle>Unhealthy Hosts</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText
+                sx={{
+                  whiteSpace: 'pre-line',
+                  fontFamily: 'monospace',
+                  fontSize: '15px',
+                  flex: 1,
+                  flexWrap: 'wrap',
+                }}
+                color="black"
+              >
+                 <Typography 
+          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
+          color="red" >
+               {data.map((row) => (JSON.stringify(row.unhealthy_hosts)))}</Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogTitle>Disabled Services</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText
+                sx={{
+                  whiteSpace: 'pre-line',
+                  fontFamily: 'monospace',
+                  fontSize: '15px',
+                  flex: 1,
+                  flexWrap: 'wrap',
+                }}
+                color="black"
+              >
+              <Typography 
+          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
+          color="red" >
+               {data.map((row) => (JSON.stringify(row.unhealthy_services)))}
+               </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogTitle>Disabled Services</DialogTitle>
+          <DialogContent>
+            <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
+              <DialogContentText
+                sx={{
+                  whiteSpace: 'pre-line',
+                  fontFamily: 'monospace',
+                  fontSize: '15px',
+                  flex: 1,
+                  flexWrap: 'wrap',
+                }}
+                color="black"
+              >
+              <Typography 
+          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
+          color="red" >
+               {data.map((row) => (JSON.stringify(row.stopped_instances)))}
+               </Typography>
+              </DialogContentText>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+           
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 }
@@ -416,6 +563,7 @@ export function HealthCard() {
   );
 }
 
+
 export const Home = () => {
   const [openlogs, setOpenLogs] = React.useState(false);
   const handleClickOpenLogs = () => {
@@ -444,6 +592,8 @@ export const Home = () => {
     }
   };
   const [auditlogdata, setAuditLogdata] = React.useState('');
+
+  
 
   return (
     // <>

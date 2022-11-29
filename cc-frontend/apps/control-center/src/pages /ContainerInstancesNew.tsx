@@ -36,9 +36,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { common, green } from '@mui/material/colors';
-import { ThemeProvider } from '@material-ui/core'
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from "@material-ui/core/styles";
+import { StyledEngineProvider } from '@mui/material/styles';
 import url_backend from '../configs/url';
 import { usePromiseTracker } from "react-promise-tracker";
 import { trackPromise } from 'react-promise-tracker';
@@ -53,25 +51,9 @@ export interface ContainerData{
   type:       string;
 }
 
-const theme = createTheme({
-  overrides: {
-      MuiTableCell: {
-          root: {  //This can be referred from Material UI API documentation. 
-              padding: '4px 8px',
-              backgroundColor: "#fff",
-          },
-      },
-  },
-});
 
-const useStyles = makeStyles({
-  tableRow: {
-    height: 30
-  },
-  tableCell: {
-    padding: "0px 16px"
-  }
-});
+
+
 
 const actionContainer =async (data) =>{
     
@@ -357,19 +339,9 @@ export const ContainerTable : React.FC<{data: ContainerData[]}> = ({ data }) => 
   
 
   const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
   const timer = React.useRef<number>();
 
   
-  const buttonSx = {
-    ...(success && {
-      bgcolor: green[500],
-      '&:hover': {
-        bgcolor: green[700],
-      },
-    }),
-  };
-
   React.useEffect(() => {
     return () => {
       clearTimeout(timer.current);
@@ -449,10 +421,7 @@ const getLogin=async(id)=>{
       setRows1(filteredRows);
     };
   
-    const cancelSearch = () => {
-      setSearched("");
-      requestSearch(searched);
-    };
+   
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof ContainerData,
@@ -627,14 +596,7 @@ const getLogin=async(id)=>{
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
-    const classes = useStyles();
-
-    const commonStyles = {
-      bgcolor: 'background.paper',
-      m: 1,
-      borderColor: 'text.primary',
-      
-    };
+   
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -710,8 +672,7 @@ const getLogin=async(id)=>{
       )}
     </Toolbar>
     <LogsDialog/>
-        
-    {/* <ThemeProvider theme={theme}> */}
+    <StyledEngineProvider injectFirst>
         <TableContainer>
           <Table
             sx={{ minWidth: 70 }}
@@ -749,10 +710,10 @@ const getLogin=async(id)=>{
                       sx={{padding:"checkbox",
                       // backgroundColor: (colorRunning?'#6fbf73':'#f6685e')
                     }}
-                      className={classes.tableRow}
+                     
                       
                     >
-                      <TableCell padding="checkbox" className={classes.tableCell}>
+                      <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -767,15 +728,15 @@ const getLogin=async(id)=>{
                         scope="row"
                         padding="none"
                         align="left"
-                        className={classes.tableCell}
+                        
                       >
                         {row.name}
                       </TableCell>
                       <TableCell align='left' sx={{color: (colorRunning?'#6fbf73':'#f6685e')}}>{colorRunning?"Running":"Not Running"}</TableCell>
                       <TableCell align="left"
-                      className={classes.tableCell}>{row.host}</TableCell>
+                      >{row.host}</TableCell>
                       <TableCell align="left"
-                      className={classes.tableCell}
+                      
                       >
                         <Tooltip title="View">
                           <IconButton
@@ -814,7 +775,7 @@ const getLogin=async(id)=>{
             </TableBody>
           </Table>
         </TableContainer>
-        {/* </ThemeProvider> */}
+        </StyledEngineProvider>library does not store live photos
         <TablePagination
           rowsPerPageOptions={[8, 16, 24]}
           component="div"

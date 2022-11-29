@@ -8,5 +8,9 @@
       }
     ]
   ],
-  "plugins": ["@emotion/babel-plugin"]
+ "plugins": [
+    [ "styled-components", { "ssr": true, "displayName": true, "preprocess": false } ],
+    ["@emotion/babel-plugin"]
+  ]
 }
+
