@@ -1,4 +1,4 @@
-import * as React  from 'react';
+import * as React from 'react';
 import styled from '@emotion/styled';
 import { Home } from '../pages /Home';
 import { Hosts } from '../pages /Hosts';
@@ -24,33 +24,13 @@ const StyledApp = styled.div`
 
 export function App() {
   const [open, setOpen] = React.useState(false);
-    return (
-    
+  return (
     <StyledApp>
-    
       <Router>
+        <MiniDrawer open={open} setOpen={setOpen} />
 
-      <MiniDrawer open={open} setOpen={setOpen} />
-         
-         
         <Routes>
-
-          {/* <Route path='/app/controlcenter' element={<Home/>} />
-          <Route path='/app/controlcenter/Hosts' element={<Hosts/>} />
-          <Route path='/app/controlcenter/Backup' element={<BackUp/>} />
-          <Route path='/app/controlcenter/Monitor' element={<Monitor/>} />
-          <Route path='/app/controlcenter/Services' element={<Services/>} />
-          <Route path='/app/controlcenter/Setupwizard' element={<SetupWizard/>} />
-          <Route path='/app/controlcenter/Upgradewizard' element={<UpgradeWizard/>} />
-          <Route path='/app/controlcenter/Containers' element={<ContainersInstances/>}/>
-          <Route path='/app/controlcenter/HostsInfo' element={<HostsInfoLanding />}/>
-          <Route path='/app/controlcenter/ServicesInfo' element={<ServicesInfoLanding/>}/>
-          <Route path='/app/controlcenter/AddHosts' element={<AddHosts/>}/>
-          <Route path='/app/controlcenter/EditHosts' element={<HostsEditLanding/>}/>
-          <Route path='/app/controlcenter/EditServices' element={<ServicesEditLanding/>}/>
-          <Route path='/app/controlcenter/ContainersInfo' element={<ContainersInfoLanding/>}/>
-           */}
-             <Route
+          <Route
             path="/app/controlcenter"
             element={
               <Main open={open}>
@@ -164,9 +144,6 @@ export function App() {
           />
         </Routes>
       </Router>
-     
-      
-
     </StyledApp>
   );
 }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as React from 'react';
 // import { ControlledAccordions } from './ServicesView';
 import { useLocation } from 'react-router-dom';
-import { ServiceData } from './ServicesTable';
+import { ServiceData } from '../models/ServiceData';
 import {ServicesEdit }from './ServicesEditnew';
 import url_backend from '../configs/url';
 import { usePromiseTracker } from "react-promise-tracker";

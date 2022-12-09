@@ -11,7 +11,7 @@ import { request } from "https";
 import { usePromiseTracker } from "react-promise-tracker";
 import { trackPromise } from 'react-promise-tracker';
 import {ThreeDots} from 'react-loader-spinner';
-
+import { HostsData } from "../models/HostData";
 
 export const LoadingIndicator = () => {
 
@@ -38,33 +38,6 @@ export const LoadingIndicator = () => {
   ):(<></>)
   
   );  
-}
-
-export interface HostsData{
-  _id:               string;
-  name:              string;
-  description:       string;
-  OS:                string;
-  Running_services:  number;
-  Running_instances: number;
-  health_status:     string;
-  services:          Service[];
-  labels:            string[];
-  number_of_cores:   number;
-  processor_type:    string;
-  memory:            string;
-  total_storage:     string;
-  storage_mounts:    StorageMount[];
-}
-
-export interface Service {
-  Name:      string;
-  Instances: number;
-}
-
-export interface StorageMount {
-  Mount_point: string;
-  Storage:     string;
 }
 
 export type HostsInfoprops={

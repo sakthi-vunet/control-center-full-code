@@ -28,39 +28,22 @@ import axios from 'axios';
 import url_backend from '../configs/url';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { ServiceData } from '../models/ServiceData';
+import { styled } from '@mui/styles';
+const actionService = async (data) => {
+  const request_url = url_backend + '/api/services/';
 
-
-export interface ServiceData {
-  _id: string;
-  name: string;
-  type: string;
-  state: string;
-  description: string;
-  expected_instances: number;
-  actual_instances: number;
-  hosts: string[];
-  labels: string[];
-}
-
-const actionService =async (data) =>{
-    
-  const request_url=url_backend+'/api/services/';
-  
   try {
-
-      const response = await axios({
-      method: "put",
+    const response = await axios({
+      method: 'put',
       url: request_url,
       data: JSON.stringify(data),
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     console.log(response);
-  
-  } catch(error) {
-  
+  } catch (error) {
     console.log(error);
   }
- 
 };
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -131,23 +114,24 @@ const headCells: readonly HeadCell[] = [
     label: 'Instances',
   },
   {
-    id: 'actual_instances',
-    numeric: true,
-    disablePadding: false,
-    label: 'Nodes',
-  },
-  {
     id: 'hosts',
     numeric: false,
     disablePadding: false,
     label: 'Node List',
   },
   {
-    id:'actual_instances',
-    numeric:false,
-    disablePadding:false,
-    label:'Status'
-  }
+    id: 'actual_instances',
+    numeric: true,
+    disablePadding: false,
+    label: 'Nodes',
+  },
+  
+  {
+    id: 'actual_instances',
+    numeric: true,
+    disablePadding: false,
+    label: 'Status',
+  },
 ];
 
 interface EnhancedTableProps {
@@ -193,7 +177,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align="left" //{headCell.numeric ? 'right' : 'left'}
+            align={headCell.numeric ? 'center' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -217,22 +201,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-}
-
 
 
 export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   data,
 }) => {
   const navigate = useNavigate();
-  
+
   const routeChangeView = (name: string) => {
     const path = `/app/controlcenter/ServicesInfo`;
     navigate(path, { state: { id: name } });
   };
-  
+
   const routeChangeEdit = (name: string) => {
     const path = `/app/controlcenter/EditServices`;
     navigate(path, { state: { id: name } });
@@ -248,32 +228,35 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searched, setSearched] = React.useState<string>('');
-  const [numSelected,setNums]= React.useState(0);
+  const [numSelected, setNums] = React.useState(0);
 
   const [rows1, setRows1] = React.useState<ServiceData[]>(data);
 
+  const StyledTableCell = styled(TableCell)({
+    padding: 0,
+    align:'left',
+    
+    
+  });
 
   React.useEffect(() => {
     setRows1(data);
     setNums(selected.length);
-  }, [data,selected.length]);
-
- 
+  }, [data, selected.length]);
 
   const requestSearch = (searchedVal: string) => {
     const filteredRows = data.filter((row) => {
-      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+      return (
+        row.name.toLowerCase().includes(searchedVal.toLowerCase()) ||
+        row.type.toLowerCase().includes(searchedVal.toLowerCase())
+      );
     });
     setRows1(filteredRows);
   };
 
-  const cancelSearch = () => {
-    setSearched('');
-    requestSearch(searched);
-  };
-
+ 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof ServiceData
@@ -343,124 +326,110 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     routeChangeEdit(name);
   };
 
-  const startService=()=>{
+  const startService = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"start"
+      temp = {
+        name: item,
+        action: 'start',
       };
       actionService(temp);
     });
-  }
+  };
 
-  const stopService=()=>{
+  const stopService = () => {
     console.log(selected);
-    let temp={}
+    let temp = {};
     selected.forEach(function (item, index) {
-      temp={
-        "name":item,
-        "action":"stop"
+      temp = {
+        name: item,
+        action: 'stop',
       };
       actionService(temp);
     });
-  }
+  };
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const checkRunning=(expected:number,actual:number)=>{
-    if(actual<expected)
-      return false
-    else
-      return true
-  }
+  const checkRunning = (expected: number, actual: number) => {
+    if (actual < expected) return false;
+    else return true;
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} elevation={3}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-
-        {/* <Paper sx={{ width: '20%', textAlign: 'center' }}>
-          
-        </Paper>
-        <span style={{ marginLeft: '.5rem' }} /> */}
+  
         <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        })
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
+          sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+            ...(numSelected > 0 && {
+              bgcolor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.activatedOpacity
+                ),
+            }),
+          }}
         >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-         Services
-        </Typography>
-        
-      
-      )}
-      {numSelected > 0 ? (
-        <>
-          <Tooltip title="Start Service">
-            <IconButton onClick={startService}>
-              <PlayCircleOutlineRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Stop Service">
-            <IconButton onClick={stopService}>
-              <PauseCircleOutlineRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </>
-      ) : (
-        
-        <>
-        <SearchBar
-            value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
-        />
-        <Tooltip title="Expanded view">
-          <IconButton onClick={routeChangeContainer}>
-            <AssignmentRoundedIcon />
-          </IconButton>
-        </Tooltip>
-        </>
+          {numSelected > 0 ? (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              color="inherit"
+              variant="subtitle1"
+              component="div"
+            >
+              {numSelected} selected
+            </Typography>
+          ) : (
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Services
+            </Typography>
+          )}
+          {numSelected > 0 ? (
+            <>
+              <Tooltip title="Start Service">
+                <IconButton onClick={startService}>
+                  <PlayCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Stop Service">
+                <IconButton onClick={stopService}>
+                  <PauseCircleOutlineRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete">
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : (
+            <>
+              <SearchBar
+                value={searched}
+                onChange={(searchVal) => requestSearch(searchVal)}
+              />
+              <Tooltip title="Expanded view">
+                <IconButton onClick={routeChangeContainer}>
+                  <AssignmentRoundedIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
+        </Toolbar>
 
-      )}
-       
-    </Toolbar>
-    
-    <Paper sx={{ width:'20%',textAlign:'center'}}>
-        
-
-     
-        </Paper>
+        <Paper sx={{ width: '20%', textAlign: 'center' }}></Paper>
         <TableContainer>
           <Table
             sx={{ minWidth: 70 }}
@@ -485,7 +454,10 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  const colorRunning=checkRunning(row.expected_instances,row.actual_instances);
+                  const colorRunning = checkRunning(
+                    row.expected_instances,
+                    row.actual_instances
+                  );
 
                   return (
                     <TableRow
@@ -496,14 +468,9 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                       tabIndex={-1}
                       key={row.name}
                       selected={isItemSelected}
-                      sx={{ padding: 'checkbox',                      
-                            // backgroundColor: (colorRunning?'#6fbf73':'#f6685e'),
-                            // "& th": {
-                            //   color:  (colorRunning?'green':'red')
-                            // }
-                      }}
+                      sx={{ padding: 'checkbox' }}
                     >
-                      <TableCell padding="checkbox">
+                      <StyledTableCell padding="checkbox">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -511,31 +478,48 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                             'aria-labelledby': labelId,
                           }}
                         />
-                      </TableCell>
-                      <TableCell
-                        component="th"
+                      </StyledTableCell>
+                      <StyledTableCell
                         id={labelId}
                         scope="row"
-                        padding="none"
-                        align="left"
+                       
                       >
                         {row.name}
-                      </TableCell>
-                      <TableCell align="left"  component="th" >{row.type}</TableCell>
-                      <TableCell align="left"  component="th">
+                      </StyledTableCell>
+                      <StyledTableCell
+                       >
+                        {row.type}
+                      </StyledTableCell>
+                      <StyledTableCell
+                      sx={{textJustify:'inter-word',textAlign:'center'}}
+                     >
                         {JSON.stringify(row.actual_instances) +
                           '/' +
                           JSON.stringify(row.expected_instances)}
-                      </TableCell>
-                      <TableCell align="left"  component="th">{row.hosts.length}</TableCell>
-                      <TableCell align="left"  component="th">
+                      </StyledTableCell>
+                      <StyledTableCell  >
                         {JSON.stringify(row.hosts, null, 2)}
-                      </TableCell>
-                      <TableCell align="left" component='th'>
-                        {colorRunning?<IconButton sx={{color:'green'}}><CheckCircleIcon/></IconButton>:
-                        <IconButton sx={{color:'red'}}><CancelIcon/></IconButton>}
-                      </TableCell>
-                      <TableCell align="left"  component="th">
+                      </StyledTableCell>
+                      <StyledTableCell
+                      sx={{textJustify:'inter-word',textAlign:'center'}}
+                       >
+                        {row.hosts.length}
+                      </StyledTableCell>
+                     
+                      <StyledTableCell  
+                      sx={{textJustify:'inter-word',textAlign:'center'}}
+                      >
+                        {colorRunning ? (
+                          <IconButton sx={{ color: 'green' }}>
+                            <CheckCircleIcon />
+                          </IconButton>
+                        ) : (
+                          <IconButton sx={{ color: 'red' }}>
+                            <CancelIcon />
+                          </IconButton>
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell  >
                         <Tooltip title="Services Detail">
                           <IconButton
                             onClick={(event) =>
@@ -554,7 +538,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                             <EditIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
-                      </TableCell>
+                      </StyledTableCell>
                     </TableRow>
                   );
                 })}
@@ -571,7 +555,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 20, 30]}
           component="div"
           count={rows1.length}
           rowsPerPage={rowsPerPage}

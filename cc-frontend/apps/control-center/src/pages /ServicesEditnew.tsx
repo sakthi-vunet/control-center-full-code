@@ -19,8 +19,8 @@ import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRou
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { ServiceData } from './ServicesTable';
-import { HostsData } from './HostsTable';
+import { ServiceData } from '../models/ServiceData';
+import { HostsData } from '../models/HostData';
 import axios from 'axios';
 import url_backend from '../configs/url';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';

@@ -29,8 +29,6 @@ import { Grid } from '@mui/material';
 import url_backend from '../configs/url';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {Button} from '@mui/material';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -38,11 +36,13 @@ import PersonIcon from '@mui/icons-material/Person';
 import axios from 'axios';
 import { blue } from '@mui/material/colors';
 import Avatar from '@mui/material/Avatar';
+import { propsToClassKey } from '@mui/styles';
 
 
-
+// set drawer menu width
 const drawerWidth = 200;
 
+// css object for open state of drawer
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -52,6 +52,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
   overflowX: 'hidden',
 });
 
+// css object for drawer close state
 const closedMixin = (theme: Theme): CSSObject => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -64,6 +65,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
+// drawer header style
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -73,10 +75,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
+// props for open state app bar 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
+// styling for app bar
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
@@ -95,6 +99,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+// styling for drawer
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -113,12 +118,13 @@ const Drawer = styled(MuiDrawer, {
 // );
 }));
 
+// props for drawer open or close
 interface miniDrawerProps {
   open: boolean;
   setOpen: (state: boolean) => void;
 }
 
-
+// styling for the page content to be aligned with the drawer
 export const Main = styled('main', {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{
@@ -144,6 +150,8 @@ export const Main = styled('main', {
 
 export default function MiniDrawer(props: miniDrawerProps) {
   const theme = useTheme();
+  
+  // User data for authentication
   const [data,setData]=React.useState('')
   const getUserData = async () => {
     const url = url_backend + '/api/user/';
@@ -158,32 +166,40 @@ export default function MiniDrawer(props: miniDrawerProps) {
     }
   };
 
-  // const [open, setOpen] = React.useState(false);
+  // Appbar icon check
   const open = props.open;
   const setOpen = props.setOpen;
 
+  // Drawer open helper function
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
+  // Drawer close helper function
   const handleDrawerClose = () => {
     setOpen(false);
   };
 
+  // user data dialog components
   const [userOpen,setUserOpen]=React.useState(false);
+
+  // logout page redirection
   const handleLogout=()=>{
     window.open(url_backend+'/accounts/logout/')
   }
 
+  // user dialog box close helper function
   const handleUserClose=()=>{
     setUserOpen(false)
   }
 
+  // user dialog box close helper function
   const handleUserOpen=()=>{
     setUserOpen(true)
     getUserData()
   }
 
+  // User dialog box component
   const UserDialog=()=>{
     return(<div>
       <Dialog
@@ -209,6 +225,8 @@ export default function MiniDrawer(props: miniDrawerProps) {
       </Dialog>
     </div>)
   }
+
+
   return (
     <>
     <UserDialog/>
@@ -216,6 +234,8 @@ export default function MiniDrawer(props: miniDrawerProps) {
       <CssBaseline />
       <AppBar position="fixed">
         <Toolbar>
+
+          {/* Hamburger menu icon */}
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -228,6 +248,7 @@ export default function MiniDrawer(props: miniDrawerProps) {
           >
             <MenuIcon />
           </IconButton>
+          {/* Close icon ehen drawer is open */}
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -244,23 +265,29 @@ export default function MiniDrawer(props: miniDrawerProps) {
               <ChevronLeftIcon />
             )}
           </IconButton>
+
+          {/* Title component */}
           <Grid>
           <Typography variant="h6" noWrap component="div">
            Control Center
           </Typography>
           </Grid>
           <Grid container justifyContent="flex-end">
-
+              {/* User Dialog Icon */}
         <IconButton>
           <AccountCircleIcon onClick={(event) => handleUserOpen()}/>
         </IconButton>
         </Grid>
         </Toolbar>
       </AppBar>
+
+      {/* Drawer components */}
       <Drawer variant="permanent" open={open}>
         
         <DrawerHeader></DrawerHeader>
         <Divider />
+
+        {/* Menu List */}
         <List>
         <Link to="/app/controlcenter"  style={{ textDecoration: 'none',color:'black' }}>
       
@@ -320,6 +347,7 @@ export default function MiniDrawer(props: miniDrawerProps) {
                   px: 2.5,
                 }}
               >
+              {/* <MenuListIconButton open> */}
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
@@ -331,6 +359,7 @@ export default function MiniDrawer(props: miniDrawerProps) {
                 </ListItemIcon>
                 <ListItemText primary="Monitor" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
+              {/* </MenuListIconButton> */}
             </ListItem>
           </Link>
           <Link to="/app/controlcenter/Services"  style={{ textDecoration: 'none',color:'black' }}>

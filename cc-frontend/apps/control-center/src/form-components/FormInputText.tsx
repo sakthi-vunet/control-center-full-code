@@ -1,5 +1,4 @@
-import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import { FormInputProps } from "./FormInputProps";
 
@@ -19,7 +18,6 @@ export const FormInputText = ({ name, control, label }: FormInputProps) => {
           error={!!error}
           onChange={onChange}
           value={value}
-          // fullWidth
           label={label}
           variant="outlined"
         />

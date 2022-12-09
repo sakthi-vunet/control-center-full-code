@@ -28,14 +28,16 @@ class MyFilter(object):
     def filter(self, logRecord):
         return logRecord.levelno <= self.__level
 
-logging.basicConfig(
-     level=logging.INFO, 
-     format= '[%(asctime)s]%(levelname)s - %(message)s',
-     datefmt='%Y-%m-%d %H:%M:%S'
- )
+# logging.basicConfig(
+#      level=logging.INFO, 
+#      format= '[%(asctime)s]%(levelname)s - %(message)s',
+#      datefmt='%Y-%m-%d %H:%M:%S'
+#  )
 
+formatter_timestamp= logging.Formatter('[%(asctime)s]%(levelname)s - %(message)s')
 handler = logging.FileHandler('/var/log/cc-logs/generator.log')
 handler.addFilter(MyFilter(logging.INFO))
+handler.setFormatter(formatter_timestamp)
 
 
 current_user='xxx'

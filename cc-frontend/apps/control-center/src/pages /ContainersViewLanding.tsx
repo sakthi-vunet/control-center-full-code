@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { Typography } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
-import { ContainerData } from './ContainerInstancesNew';
+import { ContainerData } from '../models/ContainerData';
 import { ContainersView } from './ContainersView';
 import url_backend from '../configs/url';
 import { usePromiseTracker } from 'react-promise-tracker';

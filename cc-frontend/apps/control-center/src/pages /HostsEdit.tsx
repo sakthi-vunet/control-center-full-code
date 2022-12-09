@@ -22,33 +22,7 @@ import url_backend from '../configs/url';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import Tooltip from '@mui/material/Tooltip';
 import {IconButton} from '@mui/material';
-
-export interface HostsData{
-  _id:               string;
-  name:              string;
-  description:       string;
-  OS:                string;
-  Running_services:  number;
-  Running_instances: number;
-  health_status:     string;
-  services:          Service[];
-  labels:            string[];
-  number_of_cores:   number;
-  processor_type:    string;
-  memory:            string;
-  total_storage:     string;
-  storage_mounts:    StorageMount[];
-}
-
-export interface Service {
-  Name:      string;
-  Instances: number;
-}
-
-export interface StorageMount {
-  Mount_point: string;
-  Storage:     string;
-}
+import { HostsData } from '../models/HostData';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -243,7 +217,9 @@ export const EditHosts: React.FC<{data:HostsData[]}>=({data})=> {
         display="flex"
         justifyContent="space-between"
         alignItems="center" 
+        
       >
+        <Box>
         <Typography >
             {/* {row.labels} */}
         {row.labels.map(row => (
@@ -255,6 +231,8 @@ export const EditHosts: React.FC<{data:HostsData[]}>=({data})=> {
         ))}
         {/* Expanding this table will show the server health dashboard for the host. */}
         </Typography>
+        </Box>
+        <Box sx={{m:1,p:1}}>
         {isShown && (
           <FormInputMultiCheckbox
           control={control}
@@ -264,8 +242,9 @@ export const EditHosts: React.FC<{data:HostsData[]}>=({data})=> {
           list={row.labels}
         />
       )}
+      
         {isShown?<Button variant="contained" onClick={handleSubmit(onSubmit)} size="small">Save</Button>:<Button variant="contained" onClick={handleLabelsEdit} size="small">Edit</Button>}
-           
+        </Box>
         </Box>
       </AccordionDetails>
     </Accordion>

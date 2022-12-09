@@ -3,7 +3,7 @@ import { Toolbar } from "@mui/material";
 import axios from 'axios';
 import * as React from 'react';
 import { HostsTable } from "./HostsTable";
-import { HostsData } from "./HostsTable";
+import { HostsData } from "../models/HostData";
 import url_backend from "../configs/url";
 import { usePromiseTracker } from "react-promise-tracker";
 import { trackPromise } from 'react-promise-tracker';

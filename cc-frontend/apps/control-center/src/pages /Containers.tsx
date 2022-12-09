@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import { Toolbar } from "@mui/material";
-import { ContainerData } from "./ContainerInstancesNew";
+import { ContainerData } from "../models/ContainerData";
 import { ContainerTable } from "./ContainerInstancesNew";
 import axios from 'axios';
 import * as React from 'react';
@@ -29,7 +29,7 @@ export const LoadingIndicator = () => {
     >
      <ThreeDots 
 	// color={'#2196f3'} 
-  color='purple'
+  color='blue'
 	height={150} 
 	width={150} 
 	/>
@@ -67,11 +67,8 @@ export const ContainersInstances=()=>{
     <Box
     component="main"
     sx={{ flexGrow: 1, p: 0.05,display:'flex'}}>
-     {/* marginLeft: {  sm: `200px`, md: `200px`}}}> */}
     <Toolbar />
-    
     <ContainerTable data={data}/>
-
     </Box>
     <LoadingIndicator/>
     </>

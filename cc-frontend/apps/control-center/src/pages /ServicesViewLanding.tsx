@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { ServicesView } from './ServicesViewnew';
 import { useLocation } from 'react-router-dom';
-import { ServiceData } from './ServicesTable';
+import { ServiceData } from '../models/ServiceData';
 import url_backend from '../configs/url';
 import { usePromiseTracker } from 'react-promise-tracker';
 import { trackPromise } from 'react-promise-tracker';
@@ -14,8 +14,7 @@ export const LoadingIndicator = () => {
   const { promiseInProgress } = usePromiseTracker();
 
   return promiseInProgress ? (
-    // <h1>Hey some async call in progress ! </h1>
-    <div
+       <div
       style={{
         width: '100%',
         height: '100',

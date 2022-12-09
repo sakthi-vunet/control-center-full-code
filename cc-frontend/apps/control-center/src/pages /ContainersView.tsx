@@ -7,7 +7,11 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { ContainerData } from './ContainerInstancesNew';
+import { ContainerData } from '../models/ContainerData';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DoneAll from '@mui/icons-material/DoneAll';
+import ClearIcon from '@mui/icons-material/Clear';
+import { IconButton } from '@mui/material';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -55,11 +59,14 @@ export const ContainersView: React.FC<{ data: ContainerData[] }> = ({
       setExpanded(newExpanded ? panel : false);
     };
 
+    
  
 
   return (
     <>
-      {data.map((row, index) => (
+      {data.map((row, index) => {
+          return(
+
         <div>
           <Typography
             sx={{ flex: '1 1 100%' }}
@@ -68,6 +75,7 @@ export const ContainersView: React.FC<{ data: ContainerData[] }> = ({
             component="div"
           >
             Container {'>>'} {row.name}
+            <IconButton sx={{color: (row.host?'#6fbf73':'#f6685e')}}>{row.host?<DoneAll/>:<ClearIcon/>}</IconButton>
           </Typography>
 
           <span style={{ marginLeft: '.5rem' }} />
@@ -145,7 +153,8 @@ export const ContainersView: React.FC<{ data: ContainerData[] }> = ({
           </Accordion>
           
         </div>
-      ))}
-    </>
-  );
-};
+      
+   
+          )})}
+  </>
+)};

@@ -1,7 +1,6 @@
 import { Box } from '@mui/system';
 import { Toolbar } from '@mui/material';
-
-import { ServiceData } from './ServicesTable';
+import { ServiceData } from '../models/ServiceData';
 import { ServicesTableActions } from './ServicesTable';
 import axios from 'axios';
 import * as React from 'react';

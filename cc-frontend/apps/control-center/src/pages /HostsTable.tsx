@@ -17,18 +17,14 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SearchBar from '@mkyy/mui-search-bar';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import Divider from '@mui/material/Divider';
 import { HostsInfoLanding } from './HostsViewLanding';
 import { HostsEditLanding } from './HostsEditLanding';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -36,41 +32,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import url_backend from '../configs/url';
+import { HostsData } from '../models/HostData';
+import { Service } from '../models/HostData';
 
 
-
-
-
-export interface HostsData{
-  _id:               string;
-  name:              string;
-  description:       string;
-  OS:                string;
-  Running_services:  number;
-  Running_instances: number;
-  health_status:     string;
-  services:          Service[];
-  labels:            string[];
-  number_of_cores:   number;
-  processor_type:    string;
-  memory:            string;
-  total_storage:     string;
-  storage_mounts:    StorageMount[];
-}
 
 export interface MigrateServicesListData{
   p:string[];
   np:string[];
-}
-
-export interface Service {
-  Name:      string;
-  Instances: number;
-}
-
-export interface StorageMount {
-  Mount_point: string;
-  Storage:     string;
 }
 
 

@@ -61,5 +61,3 @@ def getfromdb_settings():
     return [settings]
 
 
-  
-# print(getfromdb_settings())

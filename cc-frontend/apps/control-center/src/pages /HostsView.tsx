@@ -17,33 +17,7 @@ import Box, { IconButton } from '@mui/material';
 import { Button } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import Tooltip from '@mui/material/Tooltip';
-
-export interface HostsData {
-  _id: string;
-  name: string;
-  description: string;
-  OS: string;
-  Running_services: number;
-  Running_instances: number;
-  health_status: string;
-  services: Service[];
-  labels: string[];
-  number_of_cores: number;
-  processor_type: string;
-  memory: string;
-  total_storage: string;
-  storage_mounts: StorageMount[];
-}
-
-export interface Service {
-  Name: string;
-  Instances: number;
-}
-
-export interface StorageMount {
-  Mount_point: string;
-  Storage: string;
-}
+import { HostsData } from '../models/HostData';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />

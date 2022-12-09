@@ -158,7 +158,7 @@ export function SettingsCard() {
                  <Typography 
           sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
           color="red" >
-               {data.map((row) => (JSON.stringify(row.hosts)))}</Typography>
+               {data.map((row) => (row.hosts+' '))}</Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
@@ -178,7 +178,7 @@ export function SettingsCard() {
               <Typography 
           sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
           color="red" >
-               {data.map((row) => (JSON.stringify(row.enabled_services)))}
+               {data.map((row) => (row.enabled_services+' '))}
                </Typography>
               </DialogContentText>
             </Box>
@@ -424,7 +424,7 @@ export function StatusCard() {
                  <Typography 
           sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
           color="red" >
-               {data.map((row) => (JSON.stringify(row.unhealthy_hosts)))}</Typography>
+               {data.map((row) => (row.unhealthy_hosts+' '))}</Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
@@ -444,12 +444,12 @@ export function StatusCard() {
               <Typography 
           sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
           color="red" >
-               {data.map((row) => (JSON.stringify(row.unhealthy_services)))}
+               {data.map((row) => (row.unhealthy_services+' '))}
                </Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
-          <DialogTitle>Disabled Services</DialogTitle>
+          <DialogTitle>Failed Instances</DialogTitle>
           <DialogContent>
             <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
               <DialogContentText
@@ -465,7 +465,7 @@ export function StatusCard() {
               <Typography 
           sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
           color="red" >
-               {data.map((row) => (JSON.stringify(row.stopped_instances)))}
+               {data.map((row) => (row.stopped_instances+' '))}
                </Typography>
               </DialogContentText>
             </Box>

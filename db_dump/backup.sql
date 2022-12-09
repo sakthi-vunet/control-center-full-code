@@ -36,7 +36,7 @@ CREATE TABLE `control_center_attributes` (
 
 LOCK TABLES `control_center_attributes` WRITE;
 /*!40000 ALTER TABLE `control_center_attributes` DISABLE KEYS */;
-INSERT INTO `control_center_attributes` VALUES (1,'Last_upgrade_time','Monday 01 August 2022 11:15:41 AM IST'),(2,'Elasticsearch Port','888'),(3,'labels','[heartbeat,Telegraf heartbeat,Telegraf SNMP,vuNodeDCMCelery,vuNodeDiscoveryCelery,vuNodeAlert,vuNodeSNMP,vuNodeSNMPCelery,vuNodeDCM,vuNodeDiscovery,vuNodeDataCollector,vuNodeDAO,redis,geoserver,telegrafTrap,telegrafSyslog,telegrafTelemetry,GoFlow]\n'),(4,'platform_version','2.0'),(5,'cc_version','2.0');
+INSERT INTO `control_center_attributes` VALUES (1,'Last_upgrade_time','Monday 01 August 2022 11:15:41 AM IST'),(2,'Elasticsearch Port','888'),(3,'labels','[heartbeat,Telegraf heartbeat,Telegraf SNMP,vuNodeDCMCelery,vuNodeDiscoveryCelery,vuNodeAlert,vuNodeSNMP,vuNodeSNMPCelery,vuNodeDCM,vuNodeDiscovery,vuNodeDataCollector,vuNodeDAO,redis,geoserver,telegrafTrap,telegrafSyslog,telegrafTelemetry,goFlow,vunode,vunetstrem,vuInterface,telegraf ]'),(4,'platform_version','2.0'),(5,'cc_version','2.0');
 /*!40000 ALTER TABLE `control_center_attributes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,4 +161,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-09-22  6:00:19
+-- Dump completed on 2022-12-05  7:05:12

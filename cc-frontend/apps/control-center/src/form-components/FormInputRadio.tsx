@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { Controller } from "react-hook-form";
 import { FormInputProps } from "./FormInputProps";
-import { options } from "./FormInputProps";
 
 
 export const FormInputRadio: React.FC<FormInputProps> = ({
@@ -19,13 +18,7 @@ export const FormInputRadio: React.FC<FormInputProps> = ({
 
 }) => {
  
-  const [optionData,setOptionData]=React.useState<any>([]);
-
-  React.useEffect(() => {
-    setOptionData(options);
-  }, []);
-
-
+  const [optionData,setOptionData]=React.useState(options);
 
   return (
     <FormControl component="fieldset">
