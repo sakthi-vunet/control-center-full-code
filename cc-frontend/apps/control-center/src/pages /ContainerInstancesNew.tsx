@@ -1,6 +1,26 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
+import { ThreeDots } from 'react-loader-spinner';
+import { useNavigate } from 'react-router-dom';
+
+import SearchBar from '@mkyy/mui-search-bar';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import LoginSharpIcon from '@mui/icons-material/LoginSharp';
+import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
+import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,41 +30,19 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { visuallyHidden } from '@mui/utils';
-import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from '@mkyy/mui-search-bar';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
-import LoginSharpIcon from '@mui/icons-material/LoginSharp';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import { common, green } from '@mui/material/colors';
+import Typography from '@mui/material/Typography';
+import { green } from '@mui/material/colors';
+import { alpha } from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/material/styles';
-import url_backend from '../configs/url';
-import { usePromiseTracker } from 'react-promise-tracker';
-import { trackPromise } from 'react-promise-tracker';
-import { ThreeDots } from 'react-loader-spinner';
-import { ContainerData } from '../models/ContainerData';
-import { execPath } from 'process';
 import { styled } from '@mui/styles';
+import { visuallyHidden } from '@mui/utils';
+import axios from 'axios';
 
+import url_backend from '../configs/url';
+import { ContainerData } from '../models/ContainerData';
+
+// put request to start or stop container
 const actionContainer = async (data) => {
   const request_url = url_backend + '/api/containers/';
   try {
@@ -60,6 +58,7 @@ const actionContainer = async (data) => {
   }
 };
 
+//  comparator for table column
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -84,23 +83,7 @@ function getComparator<Key extends keyof ContainerData>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
+// props for headcell of table
 interface HeadCell {
   disablePadding: boolean;
   id: keyof ContainerData;
@@ -108,6 +91,7 @@ interface HeadCell {
   numeric: boolean;
 }
 
+// table head column names
 const headCells: readonly HeadCell[] = [
   {
     id: 'name',
@@ -129,6 +113,7 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
+// table props
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
@@ -141,6 +126,7 @@ interface EnhancedTableProps {
   rowCount: number;
 }
 
+// table head component
 function EnhancedTableHead(props: EnhancedTableProps) {
   const {
     onSelectAllClick,
@@ -150,6 +136,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     rowCount,
     onRequestSort,
   } = props;
+
+  // handles sort
   const createSortHandler =
     (property: keyof ContainerData) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -196,92 +184,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
+// props for row selection number
 interface EnhancedTableToolbarProps {
   numSelected: number;
 }
 
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected } = props;
-  const navigate = useNavigate();
-
-  const routeChange = () => {
-    const path = `/app/controlcenter/Services`;
-    navigate(path);
-  };
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitlParameter 'singleOption' implicitly has an 'any' typee"
-          component="div"
-        >
-          Container Instances
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <>
-          <Tooltip title="Start Service">
-            <IconButton>
-              <PlayCircleOutlineRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Stop Service">
-            <IconButton>
-              <PauseCircleOutlineRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </>
-      ) : (
-        <>
-          <Tooltip title="Expanded view">
-            <IconButton onClick={routeChange}>
-              <AssignmentRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
-        </>
-      )}
-    </Toolbar>
-  );
-};
-
+// style for table cells with no padding
 const StyledTableCell = styled(TableCell)({
   padding: 0,
 });
@@ -291,11 +199,13 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
 }) => {
   const navigate = useNavigate();
 
+  // route to service page
   const routeChange = () => {
     const path = `/app/controlcenter/Services`;
     navigate(path);
   };
 
+  // logs dialog box open variables
   const [open, setOpen] = React.useState(false);
   const [logdata, setLogdata] = React.useState('');
 
@@ -308,6 +218,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setLogdata('');
   };
 
+  // table feature parameters
   const [orderBy, setOrderBy] = React.useState<keyof ContainerData>('name');
   const [order, setOrder] = React.useState<Order>('asc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -316,10 +227,14 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searched, setSearched] = React.useState<string>('');
   const [numSelected, setNums] = React.useState(0);
+
+  // set log data
   const [currLogs, setCurrLogs] = React.useState('');
 
+  // set selected or searched rows
   const [rows1, setRows1] = React.useState<ContainerData[]>(data);
 
+  // refresh for logs
   const [loading, setLoading] = React.useState(false);
   const timer = React.useRef<number>();
 
@@ -329,6 +244,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     };
   }, []);
 
+  // handles log data refresh
   const handleRefresh = () => {
     setLogdata('');
     getLogs(currLogs).then((res) => {
@@ -344,6 +260,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setNums(selected.length);
   }, [selected.length]);
 
+  // gets logs from backend
   const getLogs = async (id) => {
     let url = url_backend + '/api/logs/?_id=';
     url = url + id;
@@ -358,6 +275,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     }
   };
 
+  // handles web terminal login to the container
   const getLogin = async (id) => {
     let url = url_backend + '/api/login/?name=';
     url = url + id;
@@ -383,6 +301,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     }
   };
 
+  // handles search
   const requestSearch = (searchedVal: string) => {
     const filteredRows = data.filter((row) => {
       return (
@@ -393,6 +312,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setRows1(filteredRows);
   };
 
+  // handles sort
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof ContainerData
@@ -402,6 +322,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setOrderBy(property);
   };
 
+  // handles all row selection in table
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelecteds = rows1.map((n) => n.name);
@@ -411,6 +332,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setSelected([]);
   };
 
+  // handles single row selection in table
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: readonly string[] = [];
@@ -431,10 +353,12 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setSelected(newSelected);
   };
 
+  //  handles change in table page
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
+  //  handles multirows
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -442,11 +366,13 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     setPage(0);
   };
 
+  // route to container view page
   const routeChangeView = (name: string) => {
     const path = `/app/controlcenter/ContainersInfo`;
     navigate(path, { state: { id: name } });
   };
 
+  // handles redirection to container view
   const handleContainerView = (
     event: React.MouseEvent<unknown>,
     name: string
@@ -457,11 +383,14 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     routeChangeView(name);
   };
 
+  // check if the container is runnning or not
   const checkRunning = (node: string) => {
+    // containers that are stopped will not have a node
     if (node === '') return false;
     else return true;
   };
 
+  // handles redirect to web terminal login of container
   const handleContainerLogin = (
     event: React.MouseEvent<unknown>,
     name: string
@@ -471,6 +400,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     event.stopPropagation();
   };
 
+  //  handles logs of container
   const handleContainerLogs = (
     event: React.MouseEvent<unknown>,
     name: string
@@ -485,6 +415,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     });
   };
 
+  // starts container
   const startContainer = () => {
     console.log(selected);
     let temp = {};
@@ -497,6 +428,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     });
   };
 
+  // stops container
   const stopContainer = () => {
     console.log(selected);
     let temp = {};
@@ -509,6 +441,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
     });
   };
 
+  // delete container
   const deleteContainer = () => {
     console.log(selected);
     let temp = {};
@@ -523,6 +456,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
+  //  container logs dialog component
   const LogsDialog = () => {
     return (
       <div>
@@ -583,8 +517,6 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} />
-        <Paper sx={{ width:'20%',textAlign:'center'}}> */}
         <Toolbar
           sx={{
             pl: { sm: 2 },
@@ -641,7 +573,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
                 value={searched}
                 onChange={(searchVal) => requestSearch(searchVal)}
               />
-
+              {/* service npage redirection button */}
               <Tooltip title="Expanded view">
                 <IconButton onClick={routeChange}>
                   <AssignmentRoundedIcon />
@@ -650,6 +582,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
             </>
           )}
         </Toolbar>
+        {/* logs dialog appears when log view button is clicked */}
         <LogsDialog />
         <StyledEngineProvider injectFirst>
           <TableContainer>
@@ -701,6 +634,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
                             }}
                           />
                         </StyledTableCell>
+                        {/* container name */}
                         <StyledTableCell
                           id={labelId}
                           scope="row"
@@ -709,6 +643,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
                         >
                           {row.name}
                         </StyledTableCell>
+                        {/* container status */}
                         <StyledTableCell
                           align="left"
                           sx={{ color: colorRunning ? '#6fbf73' : '#f6685e' }}
@@ -718,8 +653,10 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
                         <StyledTableCell align="left">
                           {row.host}
                         </StyledTableCell>
+
                         <StyledTableCell align="left">
                           <Tooltip title="View">
+                            {/* container view page */}
                             <IconButton
                               onClick={(event) =>
                                 handleContainerView(event, row._id)
@@ -729,6 +666,8 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Login">
+                            {/* container login button  */}
+                            {/* opens web terminal with bash of container */}
                             <IconButton
                               onClick={(event) =>
                                 handleContainerLogin(event, row.name)
@@ -738,6 +677,7 @@ export const ContainerTable: React.FC<{ data: ContainerData[] }> = ({
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Check Logs">
+                            {/* opens the log dialog for the container */}
                             <IconButton
                               onClick={(event) =>
                                 handleContainerLogs(event, row.name)

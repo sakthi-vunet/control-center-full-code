@@ -1,12 +1,17 @@
 version: "3.9"
 
 services:
+
+# mysql database
   db:
+
+  # loading the initial dump 
     volumes:
       - ./db_dump:/docker-entrypoint-initdb.d
     container_name: mysql_container_cc
 
     image: mysql:8.0.17
+  # mysql pwd and database
     environment:
       MYSQL_ROOT_PASSWORD: helloworld
       MYSQL_DATABASE: testapp
@@ -17,10 +22,12 @@ services:
     networks:
       - cc-backend-app
 
+# Django Backend
   web:
     build:
       context: .
 
+    # build file
       dockerfile: Dockerfile_backend
 
     volumes:
@@ -42,7 +49,7 @@ services:
       - cc-backend-app
     depends_on:
       - db
-  
+# Web terminal container for container login feature
   web-tty:
     image: wrfly/container-web-tty:latest
     ports:
@@ -50,9 +57,6 @@ services:
     environment:
       - WEB_TTY_DEBUG=false
       - DOCKER_HOST=/var/run/docker.sock
-      # - WEB_TTY_DOCKER_HOST=/var/run/docker.sock
-      # both the env key is OK, first is WEB_TTY_DOCKER_HOST
-      # if WEB_TTY_DOCKER_HOST not found, then try to use DOCKER_HOST
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/ssh:/bin/ssh
@@ -64,6 +68,7 @@ services:
     networks:
       - cc-backend-app
 
+# Front end react application
   front-end:
     build:
       context: .

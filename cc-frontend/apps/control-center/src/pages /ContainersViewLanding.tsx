@@ -1,21 +1,22 @@
-import { Box } from '@mui/system';
-import { Toolbar } from '@mui/material';
-import axios from 'axios';
 import * as React from 'react';
-import { Typography } from '@material-ui/core';
-import { useLocation } from 'react-router-dom';
-import { ContainerData } from '../models/ContainerData';
-import { ContainersView } from './ContainersView';
-import url_backend from '../configs/url';
+import { ThreeDots } from 'react-loader-spinner';
 import { usePromiseTracker } from 'react-promise-tracker';
 import { trackPromise } from 'react-promise-tracker';
-import { ThreeDots } from 'react-loader-spinner';
+import { useLocation } from 'react-router-dom';
 
+import { Toolbar } from '@mui/material';
+import { Box } from '@mui/system';
+import axios from 'axios';
+
+import url_backend from '../configs/url';
+import { ContainerData } from '../models/ContainerData';
+import { ContainersView } from './ContainersView';
+
+// Loading indicator for container data
 export const LoadingIndicator = () => {
   const { promiseInProgress } = usePromiseTracker();
 
   return promiseInProgress ? (
-    // <h1>Hey some async call in progress ! </h1>
     <div
       style={{
         width: '100%',
@@ -32,16 +33,18 @@ export const LoadingIndicator = () => {
   );
 };
 
+//  id to get container data of specific container
 export type ContainerInfoprops = {
   id?: string;
 };
 
 export const ContainersInfoLanding = (props: ContainerInfoprops) => {
+  // container data
   const [data, setData] = React.useState<ContainerData[]>([]);
   const location = useLocation();
   const idhere = location.state as ContainerInfoprops;
 
-  const getProductData = async () => {
+  const getContainerData = async () => {
     let url = url_backend + '/api/containers/?_id=';
     url = url + idhere.id;
     console.log(url);
@@ -56,7 +59,7 @@ export const ContainersInfoLanding = (props: ContainerInfoprops) => {
   };
 
   React.useEffect(() => {
-    trackPromise(getProductData());
+    trackPromise(getContainerData());
   }, []);
 
   return (

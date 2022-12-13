@@ -3,6 +3,8 @@ from . import containersdbdocker
 from . import hostsdbdocker
 import json
 
+# get status information from docker
+
 def get_status_info():
 
     result={}

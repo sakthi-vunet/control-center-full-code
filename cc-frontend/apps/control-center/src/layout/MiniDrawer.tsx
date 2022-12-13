@@ -1,43 +1,44 @@
 import * as React from 'react';
-import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
+
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BackupIcon from '@mui/icons-material/Backup';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import {Link} from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
-import MonitorIcon from '@mui/icons-material/Monitor';
-import SourceIcon from '@mui/icons-material/Source';
-import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
+import MonitorIcon from '@mui/icons-material/Monitor';
+import PersonIcon from '@mui/icons-material/Person';
+import SourceIcon from '@mui/icons-material/Source';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
-import BackupIcon from '@mui/icons-material/Backup';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Grid } from '@mui/material';
-import url_backend from '../configs/url';
+import { Button } from '@mui/material';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-import {Button} from '@mui/material';
+import Divider from '@mui/material/Divider';
+import MuiDrawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import PersonIcon from '@mui/icons-material/Person';
-import axios from 'axios';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
-import Avatar from '@mui/material/Avatar';
-import { propsToClassKey } from '@mui/styles';
+import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
+import axios from 'axios';
 
+import url_backend from '../configs/url';
+import { AuthContext } from '../context/AuthContext';
 
 // set drawer menu width
 const drawerWidth = 200;
@@ -75,7 +76,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-// props for open state app bar 
+// props for open state app bar
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -115,7 +116,7 @@ const Drawer = styled(MuiDrawer, {
     ...closedMixin(theme),
     '& .MuiDrawer-paper': closedMixin(theme),
   }),
-// );
+  // );
 }));
 
 // props for drawer open or close
@@ -146,21 +147,24 @@ export const Main = styled('main', {
   }),
 }));
 
-
-
 export default function MiniDrawer(props: miniDrawerProps) {
   const theme = useTheme();
-  
+  const { user, authTokens, logoutUser } = React.useContext(AuthContext);
+
   // User data for authentication
-  const [data,setData]=React.useState('')
+  const [data, setData] = React.useState('');
   const getUserData = async () => {
     const url = url_backend + '/api/user/';
-  
+    console.log(authTokens);
     try {
-      const data = await axios.get<string>(url);
-  
+      const data = await axios({
+        method: 'get',
+        url: url,
+        headers: { Authorization: `Bearer ${authTokens['access']}` },
+      });
+
       setData(data.data);
-      console.log('Data:' + { data });
+      console.log('user', JSON.stringify(data.data));
     } catch (e) {
       console.log(e);
     }
@@ -181,285 +185,319 @@ export default function MiniDrawer(props: miniDrawerProps) {
   };
 
   // user data dialog components
-  const [userOpen,setUserOpen]=React.useState(false);
+  const [userOpen, setUserOpen] = React.useState(false);
 
   // logout page redirection
-  const handleLogout=()=>{
-    window.open(url_backend+'/accounts/logout/')
-  }
 
   // user dialog box close helper function
-  const handleUserClose=()=>{
-    setUserOpen(false)
-  }
+  const handleUserClose = () => {
+    setUserOpen(false);
+  };
 
   // user dialog box close helper function
-  const handleUserOpen=()=>{
-    setUserOpen(true)
-    getUserData()
-  }
+  const handleUserOpen = () => {
+    setUserOpen(true);
+    getUserData();
+  };
+  const handleUserLogout = () => {
+    setUserOpen(false);
+    logoutUser();
+  };
 
   // User dialog box component
-  const UserDialog=()=>{
-    return(<div>
-      <Dialog
-        open={userOpen}
-        onClose={handleUserClose}
-       
-      >
-        <DialogTitle> Current User</DialogTitle>
-        <List sx={{ pt: 0 }}>
-          <ListItem>
-          <ListItemAvatar>
-              <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                <PersonIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={data?data:"Admin"} />
-          </ListItem>
-        </List>
-        <DialogActions>
-          <Button onClick={handleUserClose}>Close</Button>
-          <Button onClick={handleLogout}>Logout</Button>
-        </DialogActions>
-      </Dialog>
-    </div>)
-  }
+  const UserDialog = () => {
+    return (
+      <div>
+        <Dialog open={userOpen} onClose={handleUserClose}>
+          <DialogTitle> Current User</DialogTitle>
+          <List sx={{ pt: 0 }}>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                  <PersonIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={user ? user['username'] : 'Admin'} />
+            </ListItem>
+          </List>
+          <DialogActions>
+            <Button onClick={handleUserClose}>Close</Button>
+            <Button onClick={handleUserLogout}>Logout</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  };
 
+  if (user?.username)
+    return (
+      <>
+        <UserDialog />
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <AppBar position="fixed">
+            <Toolbar>
+              {/* Hamburger menu icon */}
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{
+                  marginRight: 5,
+                  ...(open && { display: 'none' }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+              {/* Close icon ehen drawer is open */}
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerClose}
+                edge="start"
+                sx={{
+                  marginRight: 5,
+                  ...(!open && { display: 'none' }),
+                }}
+              >
+                {theme.direction === 'rtl' ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
 
-  return (
-    <>
-    <UserDialog/>
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
+              {/* Title component */}
+              <Grid>
+                <Typography variant="h6" noWrap component="div">
+                  Control Center
+                </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-end">
+                {/* User Dialog Icon */}
+                <IconButton>
+                  <AccountCircleIcon onClick={(event) => handleUserOpen()} />
+                </IconButton>
+              </Grid>
+            </Toolbar>
+          </AppBar>
 
-          {/* Hamburger menu icon */}
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          {/* Close icon ehen drawer is open */}
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerClose}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(!open && { display: 'none' }),
-            }}
-          >
-            {theme.direction === 'rtl' ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+          {/* Drawer components */}
+          <Drawer variant="permanent" open={open}>
+            <DrawerHeader></DrawerHeader>
+            <Divider />
 
-          {/* Title component */}
-          <Grid>
-          <Typography variant="h6" noWrap component="div">
-           Control Center
-          </Typography>
-          </Grid>
-          <Grid container justifyContent="flex-end">
-              {/* User Dialog Icon */}
-        <IconButton>
-          <AccountCircleIcon onClick={(event) => handleUserOpen()}/>
-        </IconButton>
-        </Grid>
-        </Toolbar>
-      </AppBar>
+            {/* Menu List */}
+            <List>
+              <Link
+                to="/app/controlcenter/Home"
+                style={{ textDecoration: 'none', color: 'black' }}
+              >
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Home"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
 
-      {/* Drawer components */}
-      <Drawer variant="permanent" open={open}>
-        
-        <DrawerHeader></DrawerHeader>
-        <Divider />
+              <Link
+                to="/app/controlcenter/Hosts"
+                style={{ textDecoration: 'none', color: 'black' }}
+              >
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <SourceIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Hosts"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
 
-        {/* Menu List */}
-        <List>
-        <Link to="/app/controlcenter"  style={{ textDecoration: 'none',color:'black' }}>
-      
-     
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
+              <Link
+                to="/app/controlcenter/Monitor"
+                style={{ textDecoration: 'none', color: 'black' }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <HomeIcon /> 
-                </ListItemIcon>
-                <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-            
-          </Link>
-   
-          <Link to="/app/controlcenter/Hosts"  style={{ textDecoration: 'none',color:'black'}}>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    {/* <MenuListIconButton open> */}
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <MonitorIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Monitor"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                  {/* </MenuListIconButton> */}
+                </ListItem>
+              </Link>
+              <Link
+                to="/app/controlcenter/Services"
+                style={{ textDecoration: 'none', color: 'black' }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <SourceIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Hosts" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-         
-          <Link to="/app/controlcenter/Monitor"  style={{ textDecoration: 'none',color:'black' }}>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <MiscellaneousServicesIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Services"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+              <Link
+                to="/app/controlcenter/Setupwizard"
+                style={{ textDecoration: 'none', color: 'black' }}
               >
-              {/* <MenuListIconButton open> */}
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <MonitorIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Monitor" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-              {/* </MenuListIconButton> */}
-            </ListItem>
-          </Link>
-          <Link to="/app/controlcenter/Services"  style={{ textDecoration: 'none',color:'black' }}>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <DesignServicesIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Setup Wizard"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+              <Link
+                to="/app/controlcenter/Upgradewizard"
+                style={{ textDecoration: 'none', color: 'black' }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <MiscellaneousServicesIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Services" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="/app/controlcenter/Setupwizard"  style={{ textDecoration: 'none',color:'black'}}>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <UpgradeIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Upgrade Wizard"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+              <Link
+                to="/app/controlcenter/Backup"
+                style={{ textDecoration: 'none', color: 'black' }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <DesignServicesIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Setup Wizard" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="/app/controlcenter/Upgradewizard"  style={{ textDecoration: 'none',color:'black' }}>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                <UpgradeIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Upgrade Wizard" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="/app/controlcenter/Backup"  style={{ textDecoration: 'none',color:'black'}}>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                 <BackupIcon/>
-                </ListItemIcon>
-                <ListItemText primary="BackUp" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-         
-          <Divider />
-        </List>
-        
-      </Drawer>
-      
-     
-        <DrawerHeader/>
-      
-    </Box>
-    </>
-  );
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <BackupIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="BackUp"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Divider />
+            </List>
+          </Drawer>
+
+          <DrawerHeader />
+        </Box>
+      </>
+    );
+  else return <></>;
 }

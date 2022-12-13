@@ -1,20 +1,23 @@
-import { Box } from '@mui/system';
-import { Toolbar } from '@mui/material';
-import axios from 'axios';
 import * as React from 'react';
-import { ServicesView } from './ServicesViewnew';
-import { useLocation } from 'react-router-dom';
-import { ServiceData } from '../models/ServiceData';
-import url_backend from '../configs/url';
+import { ThreeDots } from 'react-loader-spinner';
 import { usePromiseTracker } from 'react-promise-tracker';
 import { trackPromise } from 'react-promise-tracker';
-import { ThreeDots } from 'react-loader-spinner';
+import { useLocation } from 'react-router-dom';
 
+import { Toolbar } from '@mui/material';
+import { Box } from '@mui/system';
+import axios from 'axios';
+
+import url_backend from '../configs/url';
+import { ServiceData } from '../models/ServiceData';
+import { ServicesView } from './ServicesViewnew';
+
+// Loading indicator for service data
 export const LoadingIndicator = () => {
   const { promiseInProgress } = usePromiseTracker();
 
   return promiseInProgress ? (
-       <div
+    <div
       style={{
         width: '100%',
         height: '100',
@@ -30,16 +33,20 @@ export const LoadingIndicator = () => {
   );
 };
 
+// service props id to get service data of the mentioned id
 type ServicesInfoprops = {
   id?: string;
 };
 
 export const ServicesInfoLanding = (props: ServicesInfoprops) => {
   const [data, setData] = React.useState<ServiceData[]>([]);
+
+  // service id passes via location state
   const location = useLocation();
   const idhere = location.state as ServicesInfoprops;
 
-  const getProductData = async () => {
+  // gets service data of specific id axios request
+  const getServiceData = async () => {
     let url = url_backend + '/api/services/?_id=';
     url = url + idhere.id;
     console.log(url);
@@ -51,8 +58,10 @@ export const ServicesInfoLanding = (props: ServicesInfoprops) => {
     }
   };
 
+  // set service data state
+  // trackPromise for loading indicator
   React.useEffect(() => {
-    trackPromise(getProductData());
+    trackPromise(getServiceData());
   }, []);
 
   return (

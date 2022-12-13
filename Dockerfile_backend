@@ -2,30 +2,39 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 
+# get necessary apache server utils and python utils
 RUN apt-get install -y apt-utils vim curl apache2 apache2-utils
 RUN apt-get -y install python3 libapache2-mod-wsgi-py3
 RUN ln /usr/bin/python3 /usr/bin/python
 RUN apt-get -y install python3-pip
-# RUN ln /usr/bin/pip3 /usr/bin/pip
+
+# upgrade pip and install django utils
 RUN pip install --upgrade pip
 RUN pip install django ptvsd
 
+# create new dir which is /code/ and set env variables
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN mkdir /code/
+
+# create dir cc-logs to store audit logs in generator.log application and 
+# give necessary permissions to log file
 RUN mkdir /var/log/cc-logs/
 RUN touch /var/log/cc-logs/generator.log
 RUN chmod 777 /var/log/cc-logs/generator.log
 
 
-
+# make /code/ the wokring dir and copy the requirements file
 WORKDIR /code/
 COPY ./cc-backend/requirements.txt /code
-
 COPY ./cc-backend/env/lib/python3.8/site-packages/docker /code
+
+# install the required py modules
 RUN pip install -r requirements.txt
 RUN pip install docker
 COPY ./cc-backend/ /code/
+
+# add the apache server config files to the server running on the container
 ADD ./cc-backend/site.conf /etc/apache2/sites-available/demo_site.conf
 ADD ./cc-backend/ports.conf /etc/apache2/ports.conf
 RUN a2ensite demo_site.conf
@@ -34,8 +43,8 @@ RUN a2enmod proxy_http
 RUN a2enmod proxy_balancer
 RUN a2enmod lbmethod_byrequests
 RUN service apache2 start
-# RUN service apache2 reload
-EXPOSE 8080 3500
 
+# expose the apache server ports
+EXPOSE 8080 3500
 CMD ["apache2ctl", "-D", "FOREGROUND"]
 

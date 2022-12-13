@@ -1,17 +1,15 @@
-import { Box } from "@mui/system";
-import { Toolbar } from "@mui/material";
+import { Toolbar } from '@mui/material';
+import { Box } from '@mui/system';
 
-
-export const Monitor=()=> {
+// Page to be used for monitor component
+export const Monitor = () => {
   return (
-      <Box
+    <Box
       component="main"
-      sx={{ flexGrow: 1, p: 3, marginLeft: {  sm: `200px`, md: `200px`}}}>
+      sx={{ flexGrow: 1, p: 3, marginLeft: { sm: `200px`, md: `200px` } }}
+    >
       <Toolbar />
-     <h1>Monitor</h1>
-      </Box> 
-   
-   
+      <h1>Monitor</h1>
+    </Box>
   );
 };
-  

@@ -15,7 +15,7 @@ def scale_up(service_name,instance):
     # pattern matching for service name in db to service instance name in docker
     r=re.compile(f'vsmaps_{data["name"]}(\-\d)*?$')
 
-        # matched list containes the instances names 
+    # matched list containes the instances names 
     actual_instances_list=list(filter(r.match, service_docker_list))
     if actual_instances_list!=[]:
         match=actual_instances_list[0]

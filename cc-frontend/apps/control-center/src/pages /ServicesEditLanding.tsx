@@ -1,57 +1,53 @@
-import { Box } from '@mui/system';
-import { Toolbar } from '@mui/material';
-import axios from 'axios';
 import * as React from 'react';
-// import { ControlledAccordions } from './ServicesView';
-import { useLocation } from 'react-router-dom';
-import { ServiceData } from '../models/ServiceData';
-import {ServicesEdit }from './ServicesEditnew';
-import url_backend from '../configs/url';
-import { usePromiseTracker } from "react-promise-tracker";
+import { ThreeDots } from 'react-loader-spinner';
+import { usePromiseTracker } from 'react-promise-tracker';
 import { trackPromise } from 'react-promise-tracker';
-import {ThreeDots} from 'react-loader-spinner';
+import { useLocation } from 'react-router-dom';
 
+import { Toolbar } from '@mui/material';
+import { Box } from '@mui/system';
+import axios from 'axios';
 
+import url_backend from '../configs/url';
+import { ServiceData } from '../models/ServiceData';
+import { ServicesEdit } from './ServicesEditnew';
+
+// Loading indicator for service data
 export const LoadingIndicator = () => {
-
   const { promiseInProgress } = usePromiseTracker();
-  
- return (
-  
-  promiseInProgress ? (
-  // <h1>Hey some async call in progress ! </h1>
-  <div
-     style={{
-        width: "100%",
-        height: "100",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
+
+  return promiseInProgress ? (
+    <div
+      style={{
+        width: '100%',
+        height: '100',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-     <ThreeDots 
-	color={'blue'} 
-	height={150} 
-	width={150} 
-	/>
+      <ThreeDots color={'blue'} height={150} width={150} />
     </div>
-  ):(<></>)
-  
-  );  
-}
+  ) : (
+    <></>
+  );
+};
 
-
+// service id prop to get service data for specific id
 type ServicesInfoprops = {
   id?: string;
 };
+
 export const ServicesEditLanding = (props: ServicesInfoprops) => {
+  // get service data of specific id
   const [data, setData] = React.useState<ServiceData[]>([]);
   const location = useLocation();
+
+  // get id props using location.state
   const idhere = location.state as ServicesInfoprops;
 
-  const getProductData = async () => {
-    
-    let url=url_backend+'/api/services/?_id='
+  const getServiceData = async () => {
+    let url = url_backend + '/api/services/?_id=';
     url = url + idhere.id;
     console.log(url);
     try {
@@ -65,21 +61,17 @@ export const ServicesEditLanding = (props: ServicesInfoprops) => {
   };
 
   React.useEffect(() => {
-  trackPromise(getProductData());
+    trackPromise(getServiceData());
   }, []);
 
-  
   return (
     <>
-    <Box
-      component="main"
-      sx={{ flexGrow: 1, p: 0.05,display:'flex'}}>
-         {/* marginLeft: { sm: `200px`, md: `200px` } }}> */}
-      <Toolbar />
+      <Box component="main" sx={{ flexGrow: 1, p: 0.05, display: 'flex' }}>
+        <Toolbar />
 
-      <ServicesEdit data={data} />
-    </Box>
-    <LoadingIndicator/>
+        <ServicesEdit data={data} />
+      </Box>
+      <LoadingIndicator />
     </>
   );
 };

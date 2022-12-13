@@ -1,0 +1,4 @@
+This Folder contains the dummy data used while developing
+All the json files her has data that matches the required interfaces in the application
+To Test the frontend without the docker setup, this dummy data files can be used.
+

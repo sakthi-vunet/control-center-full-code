@@ -5,6 +5,7 @@ import numpy as np
 from python_on_whales import docker
 from . import db_config
 
+# update labels for host object
 
 def update_hosts(host_item):
 

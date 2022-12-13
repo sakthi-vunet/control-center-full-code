@@ -1,14 +1,11 @@
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { ThreeDots } from 'react-loader-spinner';
+import { usePromiseTracker } from 'react-promise-tracker';
+import { trackPromise } from 'react-promise-tracker';
 
-import Badge from '@mui/material/Badge';
+import BookIcon from '@mui/icons-material/Book';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import {
   IconButton,
   List,
@@ -18,25 +15,27 @@ import {
   TableRow,
   ListItem,
   ListItemText,
- 
 } from '@mui/material';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-import axios from 'axios';
-import { css, cx } from '@emotion/css';
-import url_backend from '../configs/url';
-import BookIcon from '@mui/icons-material/Book';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import LinearProgress from '@mui/material/LinearProgress';
 import Fade from '@mui/material/Fade';
-import { usePromiseTracker } from 'react-promise-tracker';
-import { trackPromise } from 'react-promise-tracker';
-import { ThreeDots } from 'react-loader-spinner';
+import LinearProgress from '@mui/material/LinearProgress';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import axios from 'axios';
 
+import url_backend from '../configs/url';
+
+// Home page cards loading indicator
 export const LoadingIndicator = () => {
   const { promiseInProgress } = usePromiseTracker();
   const [openloading, setopenloading] = React.useState(!promiseInProgress);
@@ -59,12 +58,14 @@ export const LoadingIndicator = () => {
   );
 };
 
+// settings card props
 export interface Settings {
   hosts: string[];
   expected_instances: number;
   enabled_services: string[];
 }
 
+// status card props
 export interface Status {
   healthy_hosts: number;
   services_running: number;
@@ -74,15 +75,17 @@ export interface Status {
   stopped_instances: string[];
 }
 
+// version info card props
 export interface VersionInfo {
   platform_version: string;
   cc_version: string;
   Last_upgrade_time: string;
 }
 
+//  settings card component
 export function SettingsCard() {
   const [data, setData] = React.useState<Settings[]>([]);
-  const getProductData = async () => {
+  const getSettingsData = async () => {
     const url = url_backend + '/api/settings/';
 
     try {
@@ -95,16 +98,17 @@ export function SettingsCard() {
     }
   };
 
-  const [open,setOpen]=React.useState(false)
+  // handles view details dialog
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  const handleClose=()=>{
-    setOpen(false)
-  }
-  const handleOpen=()=>{
-    setOpen(true)
-  }
   React.useEffect(() => {
-    getProductData();
+    getSettingsData();
   }, []);
 
   return (
@@ -130,18 +134,17 @@ export function SettingsCard() {
             </Table>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button size="small" onClick={(event) => handleOpen()}>View Details</Button>
+            <Button size="small" onClick={(event) => handleOpen()}>
+              View Details
+            </Button>
           </CardActions>
         </Card>
       ))}
 
-<div>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          fullWidth
-          maxWidth="sm"
-        >
+      {/* view details dialog lists host and enabled services */}
+      <div>
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+          {/* Host List */}
           <DialogTitle> Hosts</DialogTitle>
           <DialogContent>
             <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
@@ -155,13 +158,23 @@ export function SettingsCard() {
                 }}
                 color="black"
               >
-                 <Typography 
-          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
-          color="red" >
-               {data.map((row) => (row.hosts+' '))}</Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                    wordWrap: 'break-word',
+                    fontSize: '15px',
+                  }}
+                  color="red"
+                >
+                  {data.map((row) => row.hosts + ' ')}
+                </Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
+          {/* Services Enabled List */}
           <DialogTitle> Services Enabled</DialogTitle>
           <DialogContent>
             <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
@@ -175,17 +188,24 @@ export function SettingsCard() {
                 }}
                 color="black"
               >
-              <Typography 
-          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
-          color="red" >
-               {data.map((row) => (row.enabled_services+' '))}
-               </Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                    wordWrap: 'break-word',
+                    fontSize: '15px',
+                  }}
+                  color="red"
+                >
+                  {data.map((row) => row.enabled_services + ' ')}
+                </Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Close</Button>
-           
           </DialogActions>
         </Dialog>
       </div>
@@ -193,10 +213,11 @@ export function SettingsCard() {
   );
 }
 
+// Version info component
 export function VersionInfoCard() {
   const [data, setData] = React.useState<VersionInfo[]>([]);
 
-  const getProductData = async () => {
+  const getVersionData = async () => {
     const url = url_backend + '/api/version_info/';
 
     try {
@@ -209,6 +230,7 @@ export function VersionInfoCard() {
     }
   };
 
+  // updates loading component
   const timerRef = React.useRef<number>();
 
   React.useEffect(
@@ -248,7 +270,7 @@ export function VersionInfoCard() {
   };
 
   React.useEffect(() => {
-    getProductData();
+    getVersionData();
   }, []);
 
   return (
@@ -259,10 +281,15 @@ export function VersionInfoCard() {
             <Table>
               <TableRow>
                 <TableCell sx={{ fontSize: 40 }}>
+                  {/* vsmaps version */}
                   {row.platform_version}
                 </TableCell>
+                {/* control center version */}
                 <TableCell sx={{ fontSize: 40 }}>{row.cc_version}</TableCell>
-                <TableCell sx={{fontSize: 10}}>{row.Last_upgrade_time}</TableCell>
+                {/* last upgrade time */}
+                <TableCell sx={{ fontSize: 10 }}>
+                  {row.Last_upgrade_time}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>vsmaps version</TableCell>
@@ -278,6 +305,7 @@ export function VersionInfoCard() {
           </CardActions>
         </Card>
       ))}
+      {/* Upgrades dialog box */}
       <div>
         <Dialog
           open={openupdates}
@@ -335,11 +363,12 @@ export function VersionInfoCard() {
   );
 }
 
-export function StatusCard() {
+// Status card component
 
+export function StatusCard() {
   const [data, setData] = React.useState<Status[]>([]);
 
-  const getProductData = async () => {
+  const getStatusData = async () => {
     const url = url_backend + '/api/status/';
 
     try {
@@ -353,16 +382,18 @@ export function StatusCard() {
   };
 
   React.useEffect(() => {
-    trackPromise(getProductData());
+    trackPromise(getStatusData());
   }, []);
-  const [open,setOpen]=React.useState(false)
 
-  const handleClose=()=>{
-    setOpen(false)
-  }
-  const handleOpen=()=>{
-    setOpen(true)
-  }
+  // handles view details dialog
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   return (
     <>
@@ -397,17 +428,16 @@ export function StatusCard() {
             </Table>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button size="small" onClick={handleOpen}>View Details</Button>
+            <Button size="small" onClick={handleOpen}>
+              View Details
+            </Button>
           </CardActions>
         </Card>
       ))}
+
+      {/* view details dialog lists unhealthy hosts,disabled services and failed instances */}
       <div>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          fullWidth
-          maxWidth="sm"
-        >
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Unhealthy Hosts</DialogTitle>
           <DialogContent>
             <Box bgcolor={'#eeeeee'} sx={{ p: 2 }}>
@@ -421,10 +451,19 @@ export function StatusCard() {
                 }}
                 color="black"
               >
-                 <Typography 
-          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
-          color="red" >
-               {data.map((row) => (row.unhealthy_hosts+' '))}</Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                    wordWrap: 'break-word',
+                    fontSize: '15px',
+                  }}
+                  color="red"
+                >
+                  {data.map((row) => row.unhealthy_hosts + ' ')}
+                </Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
@@ -441,11 +480,19 @@ export function StatusCard() {
                 }}
                 color="black"
               >
-              <Typography 
-          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
-          color="red" >
-               {data.map((row) => (row.unhealthy_services+' '))}
-               </Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                    wordWrap: 'break-word',
+                    fontSize: '15px',
+                  }}
+                  color="red"
+                >
+                  {data.map((row) => row.unhealthy_services + ' ')}
+                </Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
@@ -462,17 +509,24 @@ export function StatusCard() {
                 }}
                 color="black"
               >
-              <Typography 
-          sx={{whiteSpace:'pre-line',fontFamily:'monospace',flex:1,flexWrap:'wrap',wordWrap:'break-word',fontSize:'15px'}} 
-          color="red" >
-               {data.map((row) => (row.stopped_instances+' '))}
-               </Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    fontFamily: 'monospace',
+                    flex: 1,
+                    flexWrap: 'wrap',
+                    wordWrap: 'break-word',
+                    fontSize: '15px',
+                  }}
+                  color="red"
+                >
+                  {data.map((row) => row.stopped_instances + ' ')}
+                </Typography>
               </DialogContentText>
             </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Close</Button>
-           
           </DialogActions>
         </Dialog>
       </div>
@@ -480,10 +534,11 @@ export function StatusCard() {
   );
 }
 
+// Notifications card component
 export function NotificationsCard() {
   const [data, setData] = React.useState('');
 
-  const getProductData = async () => {
+  const getNotificationsData = async () => {
     const url = url_backend + '/api/notifications/';
 
     try {
@@ -497,39 +552,44 @@ export function NotificationsCard() {
   };
 
   React.useEffect(() => {
-    getProductData();
+    getNotificationsData();
   }, []);
 
+  // Notifications updated every 1000 seconds
+  setInterval(getNotificationsData, 1000000);
 
-  setInterval(getProductData, 6000000);
-
-  const notifyData= data.split(",");
+  // notifications data split based on comma
+  const notifyData = data.split(',');
 
   return (
     <Card sx={{ width: 500, boxShadow: 3, m: 1 }}>
       <CardContent>
         <Stack direction="row">
-          
           <Typography gutterBottom variant="h5" component="div">
-          <IconButton>
-          <Badge badgeContent={notifyData.length} color="primary"  anchorOrigin={{
-    vertical: 'top',
-    horizontal: 'left',
-  }}>
-            <NotificationsActiveIcon sx={{ color: 'black' }}/>
-          </Badge>
-          </IconButton>
+            <IconButton>
+              <Badge
+                badgeContent={notifyData.length}
+                color="primary"
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+              >
+                <NotificationsActiveIcon sx={{ color: 'black' }} />
+              </Badge>
+            </IconButton>
             Important Notifications
           </Typography>
         </Stack>
         <Typography variant="subtitle1" color="text.secondary">
-        <List >
-          {notifyData.map((item,index)=>{
-            return(
-            <ListItem sx={{paddingTop: '2px'}}>
-              <ListItemText>{item}</ListItemText>
-            </ListItem>)
-          })}
+          <List>
+            {notifyData.map((item, index) => {
+              return (
+                <ListItem sx={{ paddingTop: '2px' }}>
+                  <ListItemText>{item}</ListItemText>
+                </ListItem>
+              );
+            })}
           </List>
         </Typography>
       </CardContent>
@@ -537,16 +597,18 @@ export function NotificationsCard() {
   );
 }
 
+// Health Card Component
+// has to be connected to the internal monitoring system
+// not yet hadled
 export function HealthCard() {
   return (
     <Card sx={{ width: 680, boxShadow: 3, m: 1 }}>
       <CardContent>
         <Stack direction="row">
-          
           <Typography gutterBottom variant="h5" component="div">
-          <IconButton>
-            <HealthAndSafetyIcon  sx={{ color: 'black' }}/>
-          </IconButton>
+            <IconButton>
+              <HealthAndSafetyIcon sx={{ color: 'black' }} />
+            </IconButton>
             System Health Check
           </Typography>
         </Stack>
@@ -554,7 +616,6 @@ export function HealthCard() {
         <Typography variant="body2" color="text.secondary">
           System Health Summary appears here
         </Typography>
-
       </CardContent>
       <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button size="small">Dashboards</Button>
@@ -563,26 +624,28 @@ export function HealthCard() {
   );
 }
 
-
+//  Home component
 export const Home = () => {
+  //  handles audit log dialog
   const [openlogs, setOpenLogs] = React.useState(false);
   const handleClickOpenLogs = () => {
     setOpenLogs(true);
-    getAPIData();
+    getAuditLogData();
   };
 
   const handleCloseLogs = () => {
     setOpenLogs(false);
   };
 
-  const handleRefreshLogs =() =>{
+  const handleRefreshLogs = () => {
     setAuditLogdata('');
-    getAPIData();
-  }
+    getAuditLogData();
+  };
 
+  // get request for audit log
   const request_url = url_backend + '/api/auditlogs/';
 
-  const getAPIData = async () => {
+  const getAuditLogData = async () => {
     try {
       const data = await axios.get<Record<string, unknown>>(request_url);
 
@@ -593,11 +656,10 @@ export const Home = () => {
   };
   const [auditlogdata, setAuditLogdata] = React.useState('');
 
-  
-
   return (
-    // <>
-
+    // Used Box for all cards
+    // Stack to arrange cards horizontally
+    // Vertical Stack to arrange cards on top of eachother
     <Box
       component="main"
       sx={{
@@ -622,7 +684,7 @@ export const Home = () => {
           <HealthCard />
         </Stack>
 
-        <Stack direction="row" justifyContent="flex-end" sx={{p:1}}>
+        <Stack direction="row" justifyContent="flex-end" sx={{ p: 1 }}>
           <Button
             size="small"
             variant="contained"
@@ -632,7 +694,7 @@ export const Home = () => {
           </Button>
         </Stack>
       </Stack>
-
+      {/* Audit Logs Dialog */}
       <div>
         <Dialog
           open={openlogs}
@@ -653,12 +715,11 @@ export const Home = () => {
                 }}
                 color="black"
               >
-                {auditlogdata?auditlogdata:<ThreeDots 
-	color={'red'} 
-	height={80} 
-	width={80} 
-	/>
-  }
+                {auditlogdata ? (
+                  auditlogdata
+                ) : (
+                  <ThreeDots color={'red'} height={80} width={80} />
+                )}
               </DialogContentText>
             </Box>
           </DialogContent>
@@ -669,7 +730,5 @@ export const Home = () => {
         </Dialog>
       </div>
     </Box>
-
-    // </>
   );
 };

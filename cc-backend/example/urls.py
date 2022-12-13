@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-
+#  urls for backend features 
 urlpatterns = [
 	path('api/containers/', views.index_containers),
 	path('api/services/', views.index_services),
@@ -16,5 +16,6 @@ urlpatterns = [
 	path('api/auditlogs/',views.index_audit_logs),
 	path('api/notifications/',views.index_notifications),
 	path('api/login/',views.index_container_login),
-	path('api/user',views.index_user),
+	path('api/user/',views.index_user),
+	path('api/hostmigrate/',views.index_host_migration),
 ]

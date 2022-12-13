@@ -1,6 +1,19 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+
+import SearchBar from '@mkyy/mui-search-bar';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
+import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,26 +23,18 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { visuallyHidden } from '@mui/utils';
-import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SearchBar from '@mkyy/mui-search-bar';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import url_backend from '../configs/url';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { ServiceData } from '../models/ServiceData';
+import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 import { styled } from '@mui/styles';
+import { visuallyHidden } from '@mui/utils';
+import axios from 'axios';
+
+import url_backend from '../configs/url';
+import { AuthContext } from '../context/AuthContext';
+import { ServiceData } from '../models/ServiceData';
+
+// function that starts/stops service by put request to api/services
 const actionService = async (data) => {
   const request_url = url_backend + '/api/services/';
 
@@ -46,6 +51,7 @@ const actionService = async (data) => {
   }
 };
 
+// sorting function for table column
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -58,6 +64,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc';
 
+// comparator function for table column
 function getComparator<Key extends keyof ServiceData>(
   order: Order,
   orderBy: Key
@@ -70,23 +77,7 @@ function getComparator<Key extends keyof ServiceData>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
+// table headcell interface
 interface HeadCell {
   disablePadding: boolean;
   id: keyof ServiceData;
@@ -94,6 +85,7 @@ interface HeadCell {
   numeric: boolean;
 }
 
+// headcells data for service table
 const headCells: readonly HeadCell[] = [
   {
     id: 'name',
@@ -125,7 +117,7 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Nodes',
   },
-  
+
   {
     id: 'actual_instances',
     numeric: true,
@@ -134,6 +126,7 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
+// props for table
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
@@ -146,6 +139,7 @@ interface EnhancedTableProps {
   rowCount: number;
 }
 
+//  table head function
 function EnhancedTableHead(props: EnhancedTableProps) {
   const {
     onSelectAllClick,
@@ -155,6 +149,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     rowCount,
     onRequestSort,
   } = props;
+
+  // function to handle sort on click
   const createSortHandler =
     (property: keyof ServiceData) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -163,6 +159,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   return (
     <TableHead>
       <TableRow>
+        {/* Checkbox for multiple row selection */}
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -174,6 +171,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell>
+
+        {/* Table columns */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -195,34 +194,38 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             </TableSortLabel>
           </TableCell>
         ))}
+
+        {/* Actions column for edit view icons*/}
         <TableCell>Actions</TableCell>
       </TableRow>
     </TableHead>
   );
 }
 
-
-
 export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   data,
 }) => {
   const navigate = useNavigate();
 
+  // handles route change to service view
   const routeChangeView = (name: string) => {
     const path = `/app/controlcenter/ServicesInfo`;
     navigate(path, { state: { id: name } });
   };
 
+  // handles route change to edit service
   const routeChangeEdit = (name: string) => {
     const path = `/app/controlcenter/EditServices`;
     navigate(path, { state: { id: name } });
   };
 
+  // handles rout change to container page
   const routeChangeContainer = () => {
     const path = `/app/controlcenter/Containers`;
     navigate(path);
   };
 
+  // data table parameters
   const [orderBy, setOrderBy] = React.useState<keyof ServiceData>('name');
   const [order, setOrder] = React.useState<Order>('asc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -232,20 +235,35 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   const [searched, setSearched] = React.useState<string>('');
   const [numSelected, setNums] = React.useState(0);
 
+  // rows variable fo search
   const [rows1, setRows1] = React.useState<ServiceData[]>(data);
 
+  // user variable to set privelege level
+  const { user } = React.useContext(AuthContext);
+  const [level, setLevel] = React.useState(() =>
+    user['username'] === 'admin' ? 1 : 0
+  );
+
+  // function that handles privelege
+  const handlePrivelege = (event: React.MouseEvent<unknown>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    alert('Operation not permitted.');
+  };
+
+  // style table cell to have less padding
   const StyledTableCell = styled(TableCell)({
     padding: 0,
-    align:'left',
-    
-    
+    align: 'left',
   });
 
+  // set rows for searched value and selected rows number value
   React.useEffect(() => {
     setRows1(data);
     setNums(selected.length);
   }, [data, selected.length]);
 
+  // function that handles search based on name column and type column
   const requestSearch = (searchedVal: string) => {
     const filteredRows = data.filter((row) => {
       return (
@@ -256,7 +274,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     setRows1(filteredRows);
   };
 
- 
+  // calls the sort function descending or ascending
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof ServiceData
@@ -266,6 +284,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     setOrderBy(property);
   };
 
+  // function that handles select all rows feature
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelecteds = rows1.map((n) => n.name);
@@ -275,6 +294,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     setSelected([]);
   };
 
+  // function to handle single row select
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: readonly string[] = [];
@@ -295,10 +315,12 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     setSelected(newSelected);
   };
 
+  // change page in table
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
+  // change pagination(rows per page)
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -306,6 +328,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     setPage(0);
   };
 
+  // service view handler
   const handleServicesView = (
     event: React.MouseEvent<unknown>,
     name: string
@@ -316,6 +339,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     routeChangeView(name);
   };
 
+  // service edit handler
   const handleServicesEdit = (
     event: React.MouseEvent<unknown>,
     name: string
@@ -326,6 +350,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
     routeChangeEdit(name);
   };
 
+  // start service handler
   const startService = () => {
     console.log(selected);
     let temp = {};
@@ -337,7 +362,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
       actionService(temp);
     });
   };
-
+  // stop service handler
   const stopService = () => {
     console.log(selected);
     let temp = {};
@@ -349,12 +374,14 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
       actionService(temp);
     });
   };
+
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
+  // checks if the actual number of running instances exceed the expected instance value
   const checkRunning = (expected: number, actual: number) => {
     if (actual < expected) return false;
     else return true;
@@ -363,7 +390,6 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} elevation={3}>
-  
         <Toolbar
           sx={{
             pl: { sm: 2 },
@@ -396,6 +422,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
               Services
             </Typography>
           )}
+          {/* Start and Stop service buttons */}
           {numSelected > 0 ? (
             <>
               <Tooltip title="Start Service">
@@ -408,18 +435,16 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                   <PauseCircleOutlineRoundedIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Delete">
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
             </>
           ) : (
+            // Search bar
             <>
               <SearchBar
                 value={searched}
                 onChange={(searchVal) => requestSearch(searchVal)}
               />
+
+              {/* Container Page Button */}
               <Tooltip title="Expanded view">
                 <IconButton onClick={routeChangeContainer}>
                   <AssignmentRoundedIcon />
@@ -436,6 +461,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
+            {/* Table head */}
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -479,35 +505,28 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                           }}
                         />
                       </StyledTableCell>
-                      <StyledTableCell
-                        id={labelId}
-                        scope="row"
-                       
-                      >
+                      <StyledTableCell id={labelId} scope="row">
                         {row.name}
                       </StyledTableCell>
+                      <StyledTableCell>{row.type}</StyledTableCell>
                       <StyledTableCell
-                       >
-                        {row.type}
-                      </StyledTableCell>
-                      <StyledTableCell
-                      sx={{textJustify:'inter-word',textAlign:'center'}}
-                     >
+                        sx={{ textJustify: 'inter-word', textAlign: 'center' }}
+                      >
                         {JSON.stringify(row.actual_instances) +
                           '/' +
                           JSON.stringify(row.expected_instances)}
                       </StyledTableCell>
-                      <StyledTableCell  >
+                      <StyledTableCell>
                         {JSON.stringify(row.hosts, null, 2)}
                       </StyledTableCell>
                       <StyledTableCell
-                      sx={{textJustify:'inter-word',textAlign:'center'}}
-                       >
+                        sx={{ textJustify: 'inter-word', textAlign: 'center' }}
+                      >
                         {row.hosts.length}
                       </StyledTableCell>
-                     
-                      <StyledTableCell  
-                      sx={{textJustify:'inter-word',textAlign:'center'}}
+                      {/* Status is green or red based on actual instance value */}
+                      <StyledTableCell
+                        sx={{ textJustify: 'inter-word', textAlign: 'center' }}
                       >
                         {colorRunning ? (
                           <IconButton sx={{ color: 'green' }}>
@@ -519,7 +538,7 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                           </IconButton>
                         )}
                       </StyledTableCell>
-                      <StyledTableCell  >
+                      <StyledTableCell>
                         <Tooltip title="Services Detail">
                           <IconButton
                             onClick={(event) =>
@@ -529,10 +548,13 @@ export const ServicesTableActions: React.FC<{ data: ServiceData[] }> = ({
                             <VisibilityIcon sx={{ fontSize: 20 }} />
                           </IconButton>
                         </Tooltip>
+                        {/* Edit option available only based on privelege */}
                         <Tooltip title="Edit">
                           <IconButton
-                            onClick={(event) =>
-                              handleServicesEdit(event, row._id)
+                            onClick={
+                              level === 1
+                                ? (event) => handleServicesEdit(event, row._id)
+                                : (event) => handlePrivelege(event)
                             }
                           >
                             <EditIcon sx={{ fontSize: 20 }} />

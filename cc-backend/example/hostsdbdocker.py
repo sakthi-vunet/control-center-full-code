@@ -1,9 +1,9 @@
 import docker
 import subprocess
-from mysqlcheck import *
+from . import mysqlcheck
 import json
 import sqlalchemy as db
-from hostsdb import *
+from . import hostsdb
 import re
 from . import servicesdb
 
@@ -14,7 +14,10 @@ client = docker.from_env()
 
 def get_services_list(nodeid):
     
+    # services data from db
     db_servicedata=servicesdb.get_service_db()
+
+    # service list from docker
     service_list=client.services.list()
 
     service_docker_list=[]
@@ -32,6 +35,7 @@ def get_services_list(nodeid):
 
         client2 = docker.APIClient(base_url='unix://var/run/docker.sock')
         
+        # count the actual instances
         if actual_instances_list!=[]:
             count=0
             for services_names in actual_instances_list:
@@ -66,7 +70,7 @@ def get_hosts():
 
     # getting host information stored in database 
     # sqlconnect function executes 'select * from hosts query'
-    db_result=sqlconnect()
+    db_result=hostsdb.sqlconnect()
 
 
     # parsing through each enrty in host table
@@ -109,7 +113,6 @@ def get_hosts():
         result.append(hosts_item)
     
     final=json.dumps(result,indent=2)
-    # print(final)
     
     
     return final

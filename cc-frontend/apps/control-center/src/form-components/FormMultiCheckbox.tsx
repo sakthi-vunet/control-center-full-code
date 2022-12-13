@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Controller } from 'react-hook-form';
+
 import {
   Checkbox,
   FormControl,
@@ -6,11 +8,12 @@ import {
   FormLabel,
   Typography,
 } from '@mui/material';
-import { Controller } from 'react-hook-form';
-import { FormInputProps } from './FormInputProps';
 import axios from 'axios';
-import url_backend from '../configs/url';
 
+import url_backend from '../configs/url';
+import { FormInputProps } from './FormInputProps';
+
+// component for multicheckbox
 export const FormInputMultiCheckbox: React.FC<FormInputProps> = ({
   name,
   control,
@@ -19,6 +22,8 @@ export const FormInputMultiCheckbox: React.FC<FormInputProps> = ({
   list = [],
 }) => {
   const [data, setData] = React.useState<Record<string, unknown>>({});
+
+  // label data passed
   const request_url = url_backend + '/api/labels/';
 
   const getAPIData = async () => {
@@ -38,13 +43,13 @@ export const FormInputMultiCheckbox: React.FC<FormInputProps> = ({
   let temp = String(data[0]);
   temp = temp.slice(1, -2);
 
+  //  options have both label(display data) and value
   const options_list = temp.split(',');
 
   const options = options_list?.map(function (e) {
     return { label: e, value: e };
   });
 
-  
   const [selectedItems, setSelectedItems] = useState<string[]>(list);
 
   const handleSelect = (value: string) => {
@@ -58,7 +63,7 @@ export const FormInputMultiCheckbox: React.FC<FormInputProps> = ({
       }
     }
   };
-
+  // to check the previously selected items
   useEffect(() => {
     setValue(name, selectedItems);
   }, [selectedItems]);

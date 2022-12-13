@@ -1,24 +1,27 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import { IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Box, { IconButton } from '@mui/material';
-import { Button } from '@mui/material';
-import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+
 import { HostsData } from '../models/HostData';
 
+// styles for Accordion head
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -30,7 +33,7 @@ const Accordion = styled((props: AccordionProps) => (
     display: 'none',
   },
 }));
-
+// styles for Accordion summary
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
   <MuiAccordionSummary
     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
@@ -49,7 +52,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
     marginLeft: theme.spacing(1),
   },
 }));
-
+// styles for Accordion details
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
@@ -58,13 +61,17 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
   data,
 }) => {
+  // accorion expansion parameter
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
+  // handles accordion expansion changes
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
 
+  // not yet handled
+  // has to be configured to connect to host
   const handleHostConnect = () => {
     console.log(' connect to host');
   };
@@ -79,7 +86,9 @@ export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
             id="tableTitle"
             component="div"
           >
+            {/* Host name */}
             Hosts {'>>'} {row.name}
+            {/* Host health is green for healthy and red for not healthy */}
             {row.health_status === 'Healthy' ? (
               <Tooltip title="Healthy">
                 <IconButton>
@@ -96,6 +105,7 @@ export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
           </Typography>
           <span style={{ marginLeft: '.5rem' }} />
 
+          {/* basic Host Information Table */}
           <Accordion
             expanded={expanded === 'panel1'}
             onChange={handleChange('panel1')}
@@ -132,6 +142,8 @@ export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
               </Paper>
             </AccordionDetails>
           </Accordion>
+
+          {/* Services and their instances mapping on this host */}
           <Accordion
             expanded={expanded === 'panel2'}
             onChange={handleChange('panel2')}
@@ -167,7 +179,7 @@ export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
               </Paper>
             </AccordionDetails>
           </Accordion>
-
+          {/* Labels assigned to this host */}
           <Accordion
             expanded={expanded === 'panel3'}
             onChange={handleChange('panel3')}
@@ -193,9 +205,8 @@ export const ControlledAccordions: React.FC<{ data: HostsData[] }> = ({
               </Typography>
             </AccordionDetails>
           </Accordion>
-
-       
-
+          {/* Connect to host  */}
+          {/* not yet handled */}
           <Accordion
             expanded={expanded === 'panel4'}
             onChange={handleChange('panel4')}

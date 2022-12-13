@@ -1,4 +1,5 @@
 // interface for servicedata
+
 export interface ServiceData {
     _id: string;
     name: string;

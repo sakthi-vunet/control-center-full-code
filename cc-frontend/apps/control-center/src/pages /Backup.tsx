@@ -1,18 +1,16 @@
-import { Box } from "@mui/system";
-import { Toolbar } from "@mui/material";
+import { Toolbar } from '@mui/material';
+import { Box } from '@mui/system';
 
+//  Page to be used for backup
 
-
-export const BackUp=()=> {
+export const BackUp = () => {
   return (
-      <Box
+    <Box
       component="main"
-      sx={{ flexGrow: 1, p: 3, marginLeft: {  sm: `200px`, md: `200px`}}}>
+      sx={{ flexGrow: 1, p: 3, marginLeft: { sm: `200px`, md: `200px` } }}
+    >
       <Toolbar />
-     <h1>BackUp</h1>
-      </Box> 
-   
-   
+      <h1>BackUp</h1>
+    </Box>
   );
 };
-  
