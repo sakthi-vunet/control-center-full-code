@@ -44,12 +44,9 @@ INSTALLED_APPS = [
     # 3rd Party Apps
     'rest_framework',  # new
     'rest_framework.authtoken',  # new
-    'rest_auth',  # new
     'django.contrib.sites',  # new
-    'allauth',  # new
-    'allauth.account',  # new
-    'allauth.socialaccount',  # new
-    'rest_auth.registration',  # new
+    'rest_framework_simplejwt.token_blacklist',
+    
     # Local Apps
     'api'
 ]

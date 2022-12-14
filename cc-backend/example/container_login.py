@@ -74,8 +74,8 @@ def get_login(service_name):
                     # HostKeys object(in case of missing)
                     # AutoAddPolicy for missing host key to be set before connection setup.
                     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                    ssh.connect('192.168.8.155',  username='sakthi',
-                                password='Lucky@2002', timeout=3)
+                    ssh.connect(hostname,  username='vunet',
+                                password='', timeout=3)
                     # Execute command on SSH terminal
                     # using exec_command
                     # get container id

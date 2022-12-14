@@ -3,7 +3,7 @@
 
 config = {
 
-    'host': '172.20.0.2',
+    'host': 'mysql_container_cc',
     'port': '3306',
     'user': 'root',
     'password': 'helloworld',

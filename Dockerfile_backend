@@ -45,6 +45,6 @@ RUN a2enmod lbmethod_byrequests
 RUN service apache2 start
 
 # expose the apache server ports
-EXPOSE 8080 3500
+EXPOSE 3500 8080
 CMD ["apache2ctl", "-D", "FOREGROUND"]
 

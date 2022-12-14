@@ -24,11 +24,13 @@ services:
 
 # Django Backend
   web:
-    build:
-      context: .
-
+    build: 
+      # context: .
+    
     # build file
+      context: .
       dockerfile: Dockerfile_backend
+    command: python manage.py runserver 0.0.0.0:8000
 
     volumes:
       - ./cc-backend:/code
@@ -72,6 +74,7 @@ services:
   front-end:
     build:
       context: .
+      
 
       dockerfile: Dockerfile_frontend
     volumes:
